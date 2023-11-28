@@ -1,1 +1,8 @@
-this is show page
+@extends('layouts.app')
+
+@section('content')
+
+<a href="/">Back</a>
+{{ $product->title }}
+
+@endsection
