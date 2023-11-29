@@ -3,21 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Product;
+use App\Models\File;
 
 class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::all();
+        $files = File::all();
 
-        return view('index', ['products' => $products]);
+        return view('index', ['files' => $files]);
     }
 
     public function show($id)
     {
-        $product = Product::findOrFail($id);
+        $file = File::findOrFail($id);
 
-        return view('show', compact('product'));
+        return view('show', compact('file'));
     }
 }

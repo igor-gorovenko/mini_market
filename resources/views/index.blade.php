@@ -5,8 +5,8 @@
 <h1>Catalog</h1>
 
 <ul>
-    @foreach ($products as $product)
-    <li><a href="{{ route('show', ['id' => $product->id]) }}">{{ $product->title }}</a></li>
+    @foreach ($files as $file)
+    <li><a href="{{ route('show', ['id' => $file->id]) }}">{{ $file->name }}</a></li>
     @endforeach
 </ul>
 
