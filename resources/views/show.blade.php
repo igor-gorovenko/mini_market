@@ -7,7 +7,7 @@
 
 <div>Name: {{ $file->name }}</div>
 <div>description: {{ $file->description }}</div>
-<div>Image: <img src="{{ asset($file->thumbnail) }}" alt="Thumbnail"></div>
+<iframe src="{{ asset($file->path) }}" width="200" height="120"></iframe>
 <div>path: {{ $file->path }}</div>
 <div>price: {{ $file->price }}</div>
 <div>

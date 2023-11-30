@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Support\Facades\File as File;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File as File;
 use Faker\Factory as Faker;
-
+use TCPDF;
 
 class FilesTableSeeder extends Seeder
 {
@@ -20,22 +20,24 @@ class FilesTableSeeder extends Seeder
         DB::table('files')->truncate();
 
         $directory = storage_path('app/uploaded_files');
-        if (!File::exists($directory)) {
-            File::makeDirectory($directory, 0777, true, true);
-        }
+        File::cleanDirectory($directory);
 
         for ($i = 0; $i < 10; $i++) {
-            $thumbnailPath = $directory . '/' . $faker->word . '.jpg'; // или другое расширение по вашему выбору
+            $pdfPath = $directory . '/' . $faker->word . '.pdf';
 
-            // Сохраняем случайное изображение в директорию
-            copy($faker->imageUrl(), $thumbnailPath);
+            // Создать PDF
+            $pdf = new TCPDF();
 
+            $pdf->AddPage();
+            $pdf->Cell(40, 10, 'Hello World!');
+
+            $pdf->Output($pdfPath, 'F');
 
             DB::table('files')->insert([
                 'name' => $faker->word,
                 'description' => $faker->sentence,
-                'thumbnail' => $thumbnailPath,
-                'path' => $directory . '/' . $faker->word . '.txt', // или другое расширение файла по вашему усмотрению
+                'thumbnail' => $pdfPath,
+                'path' => $pdfPath,
                 'price' => $faker->randomFloat(2, 0, 100),
                 'dates' => $faker->date(),
                 'created_at' => now(),
