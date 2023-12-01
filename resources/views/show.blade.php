@@ -7,19 +7,20 @@
 
 <div>Name: {{ $file->name }}</div>
 <div>description: {{ $file->description }}</div>
-<iframe src="{{ asset($file->path) }}" width="200" height="120"></iframe>
+
+<iframe src="{{ asset('/storage/uploaded_files/' . basename($file->path)) }}" width="400"></iframe>
+<div>src: {{asset('/storage/uploaded_files/' . basename($file->path)) }}</div>
+
+<div>thumbnail: {{ $file->thumbnail }}</div>
+
 <div>path: {{ $file->path }}</div>
 <div>price: {{ $file->price }}</div>
-<div>
-    Dates: {{ $file->dates }}
-</div>
-<div>
-    Created: {{ $file->created_at }}
-</div>
+<div>Dates: {{ $file->dates }}</div>
+<div>Created: {{ $file->created_at }}</div>
 
 <div>
     {{-- Link to download the file --}}
-    <a href="{{ asset($file->path) }}" download="{{ $file->name }}">Download File</a>
+    <a href="{{ asset('/storage/uploaded_files/' . basename($file->path)) }}" download="{{ $file->name }}">Download File</a>
 </div>
 
 

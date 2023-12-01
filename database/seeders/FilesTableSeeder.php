@@ -19,7 +19,7 @@ class FilesTableSeeder extends Seeder
         // Очистить таблицу перед заполнением
         DB::table('files')->truncate();
 
-        $directory = storage_path('app/uploaded_files');
+        $directory = storage_path('app/public/uploaded_files');
         File::cleanDirectory($directory);
 
         for ($i = 0; $i < 10; $i++) {
