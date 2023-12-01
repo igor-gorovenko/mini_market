@@ -3,24 +3,22 @@
 @section('content')
 
 <a href="/">Back</a>
-<h3>Show File: {{ $file->name }}</h3>
+<h3>{{ $file->name }} ({{ $file->dates }})</h3>
 
-<div>Name: {{ $file->name }}</div>
-<div>description: {{ $file->description }}</div>
+<div>Description: {{ $file->description }}</div>
 
-<iframe src="{{ asset('/storage/uploaded_files/' . basename($file->path)) }}" width="400"></iframe>
-<div>src: {{asset('/storage/uploaded_files/' . basename($file->path)) }}</div>
+<div>Date: {{ $file->dates }}</div>
+<div>Price: ${{ $file->price }}</div>
+<div>
+    <h5>Preview</h5>
+    <iframe src="{{ asset('/storage/uploaded_files/' . basename($file->path)) }}" width="400"></iframe>
+</div>
 
-<div>thumbnail: {{ $file->thumbnail }}</div>
-
-<div>path: {{ $file->path }}</div>
-<div>price: {{ $file->price }}</div>
-<div>Dates: {{ $file->dates }}</div>
-<div>Created: {{ $file->created_at }}</div>
 
 <div>
+    <h5>Download</h5>
     {{-- Link to download the file --}}
-    <a href="{{ asset('/storage/uploaded_files/' . basename($file->path)) }}" download="{{ $file->name }}">Download File</a>
+    <a href="{{ asset('/storage/uploaded_files/' . basename($file->path)) }}" download="{{ $file->name }}">Download {{ $file->name }}.pdf</a>
 </div>
 
 

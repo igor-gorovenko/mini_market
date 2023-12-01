@@ -23,18 +23,19 @@ class FilesTableSeeder extends Seeder
         File::cleanDirectory($directory);
 
         for ($i = 0; $i < 10; $i++) {
-            $pdfPath = $directory . '/' . $faker->word . '.pdf';
+            $fileName = $faker->word;
+            $pdfPath = $directory . '/' . $fileName . '.pdf';
 
             // Создать PDF
             $pdf = new TCPDF();
 
             $pdf->AddPage();
-            $pdf->Cell(40, 10, 'Hello World!');
+            $pdf->Cell(40, 10, "Hello World! This is $fileName");
 
             $pdf->Output($pdfPath, 'F');
 
             DB::table('files')->insert([
-                'name' => $faker->word,
+                'name' => $fileName,
                 'description' => $faker->sentence,
                 'thumbnail' => $pdfPath,
                 'path' => $pdfPath,
