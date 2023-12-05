@@ -8,7 +8,7 @@
 <div class="p-4 d-flex">
     <div class="container w-70">
         <h5>Preview</h5>
-        <iframe src="{{ asset('/storage/uploaded_files/' . basename($file->path)) }}" class="w-100 h-100"></iframe>
+        <img src="{{ asset('/storage/uploaded_files/' . pathinfo($file->path, PATHINFO_FILENAME) . '.jpg') }}" width='240px' height='240px' alt="Изображение">
     </div>
     <div class="container w-30">
         <h3>{{ $file->name }}</h3>

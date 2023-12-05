@@ -14,7 +14,7 @@ class File extends Model
     protected $fillable = [
         'name',
         'description',
-        'trumbnail',
+        'thumbnail',
         'path',
         'price',
         'dates',

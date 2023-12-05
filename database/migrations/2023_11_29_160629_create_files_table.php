@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('thumbnail')->nullable();
             $table->string('path');
             $table->double('price', 8, 2);
-            $table->timestamps();
             $table->date('dates')->nullable();
+            $table->timestamps();
         });
     }
 
