@@ -6,7 +6,7 @@
 
 <ul>
     @foreach ($files as $file)
-    <li><a href="{{ route('show', ['id' => $file->id]) }}">{{ $file->name }}</a></li>
+    <li><a href="{{ route('show', ['name' => $file->name]) }}">{{ $file->name }}</a></li>
     @endforeach
 </ul>
 

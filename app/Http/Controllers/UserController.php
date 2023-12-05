@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\File;
 
-class FileController extends Controller
+class UserController extends Controller
 {
     public function index()
     {
@@ -13,9 +13,9 @@ class FileController extends Controller
         return view('user.index', ['files' => $files]);
     }
 
-    public function show($id)
+    public function show($name)
     {
-        $file = File::findOrFail($id);
+        $file = File::where('name', $name)->firstOrFail();
 
         return view('user.show', compact('file'));
     }
