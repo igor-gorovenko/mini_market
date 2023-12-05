@@ -11,12 +11,22 @@ use App\Http\Controllers\HomeController;
 Auth::routes();
 
 Route::middleware(['admin'])->group(function () {
-    Route::get('/admin', [AdminController::class, 'index'])->name('index');
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
 });
 
 Route::middleware(['user'])->group(function () {
-    Route::get('/', [UserController::class, 'index'])->name('index');
-    Route::get('/{name}', [UserController::class, 'show'])->name('show')->where('name', '[a-zA-Z0-9_-]+');
+    Route::get('/', [UserController::class, 'index'])->name('user.index');
+    Route::get('/{name}', [UserController::class, 'show'])->name('user.show')->where('name', '[a-zA-Z0-9_-]+');
 });
 
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/', function () {
+    $user = Auth::user();
+    if ($user) {
+        if ($user->is_admin) {
+            return redirect()->route('admin.index');
+        } else {
+            return redirect()->route('user.index');
+        }
+    }
+    return view('auth.login');
+})->name('index');
