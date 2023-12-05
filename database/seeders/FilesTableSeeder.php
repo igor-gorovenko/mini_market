@@ -35,27 +35,27 @@ class FilesTableSeeder extends Seeder
             $pdf->Output($pdfPath, 'F');
 
             $colors = [
-                '#ff0000', // Красный
-                '#00ff00', // Зелёный
-                '#0000ff', // Синий
-                '#ffff00', // Жёлтый
-                '#ff00ff', // Фиолетовый
-                '#ffa500', // Оранжевый
-                '#008080', // Тёмно-зелёный
-                '#800080', // Пурпурный
-                '#008000', // Тёмно-синий
+                '#d9534f', // Красный
+                '#5bc0de', // Голубой
+                '#5cb85c', // Зелёный
+                '#f0ad4e', // Жёлтый
+                '#8e44ad', // Фиолетовый
+                '#e67e22', // Оранжевый
+                '#16a085', // Тёмно-зелёный
+                '#9b59b6', // Пурпурный
+                '#3498db', // Тёмно-синий
             ];
             $randomColor = $colors[array_rand($colors)];
 
             // Создать изображение
-            $image = Image::canvas(320, 320, $randomColor);
+            $image = Image::canvas(160, 160, $randomColor);
 
             // Добавить надпись
             $text = $fileName;
             $fontColor = '#000';
-            $image->text($text, 160, 160, function ($font) use ($fontColor) {
+            $image->text($text, 80, 80, function ($font) use ($fontColor) {
                 $font->color($fontColor);
-                $font->size(24);
+                $font->size(48);
                 $font->align('center');
                 $font->valign('middle');
             });
