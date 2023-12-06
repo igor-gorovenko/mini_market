@@ -22,7 +22,9 @@
     @include('components.header')
 
     <div class="container p-4">
-        @yield('content')
+        <div class="container bg-white p-4">
+            @yield('content')
+        </div>
     </div>
 
 </body>

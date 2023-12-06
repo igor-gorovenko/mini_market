@@ -16,6 +16,7 @@ Route::middleware(['admin'])->prefix('/admin')->group(function () {
     // Files
     Route::prefix('/files')->group(function () {
         Route::get('/', [AdminController::class, 'files'])->name('admin.files.list');
+        Route::get('/{name}', [AdminController::class, 'show'])->name('admin.files.show')->where('name', '[a-zA-Z0-9_-]+');
         Route::get('/create', [AdminController::class, 'create'])->name('admin.files.create');
         Route::get('/{name}/edit', [AdminController::class, 'edit'])->name('admin.files.edit')->where('name', '[a-zA-Z0-9_-]+');
         Route::post('/{name}/edit', [AdminController::class, 'update'])->name('admin.files.update')->where('name', '[a-zA-Z0-9_-]+');

@@ -1,11 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
+<div>
+    <a href="{{ route('admin.files.show', ['name' => $file->name]) }}">Back</a>
+</div>
+<h1>Edit page</h1>
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Edit File</div>
                 <div class="panel-body">
                     @if (session('success'))
                     <div class="alert alert-success">

@@ -22,6 +22,17 @@ class AdminController extends Controller
         return view('admin.files.list', compact('files'));
     }
 
+    public function show($name)
+    {
+        $file = File::where('name', $name)->firstOrFail();
+
+        if (!$file) {
+            abort(404);
+        }
+
+        return view('admin.files.show', compact('file'));
+    }
+
     public function create()
     {
         return view('admin.files.create');
