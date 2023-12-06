@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\File;
 use Illuminate\Support\Facades\Storage;
-use Laravel\Ui\Presets\React;
 
 class AdminController extends Controller
 {
@@ -45,7 +44,7 @@ class AdminController extends Controller
         // Проверка, была ли отправлена форма редактирования
         if (request()->isMethod('post')) {
             $this->validateAndSaveFile($request, $file);
-            return redirect()->route('admin.files.list')->with('success', 'File updated');
+            return redirect()->route('admin.files.show', ['name' => $file->name])->with('success', 'File updated');
         }
 
         return view('admin.files.edit', compact('file'));
@@ -55,7 +54,7 @@ class AdminController extends Controller
     {
         $file = File::where('name', $name)->firstOrFail();
         $this->validateAndSaveFile($request, $file);
-        return redirect()->route('admin.files.list')->with('success', 'File updated');
+        return redirect()->route('admin.files.show', ['name' => $file->name])->with('success', 'File updated');
     }
 
     private function validateAndSaveFile(Request $request, File $file)
@@ -85,7 +84,8 @@ class AdminController extends Controller
                 Storage::disk('public')->delete($file->thumbnail);
             }
 
-            $thumbnailPath = $request->file('thumbnail')->store('thumbnails', 'public');
+
+            $thumbnailPath = $request->file('thumbnail')->storeAs('uploaded_files/images', $file->name . '.jpg', 'public');
             $file->update(['thumbnail' => $thumbnailPath]);
         }
     }

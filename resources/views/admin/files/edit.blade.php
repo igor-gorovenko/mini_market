@@ -31,6 +31,15 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="thumbnail">Thumbnail Preview:</label>
+                            @if($file->thumbnail)
+                            <img src="{{ asset('/storage/uploaded_files/images/' . pathinfo($file->path, PATHINFO_FILENAME) . '.jpg') }}" width='50px' alt="Image">
+                            @else
+                            <p>No thumbnail available</p>
+                            @endif
+                        </div>
+
+                        <div class="form-group">
                             <label for="thumbnail">Thumbnail:</label>
                             <input type="file" name="thumbnail" class="form-control">
                         </div>
