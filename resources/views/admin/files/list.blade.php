@@ -25,7 +25,7 @@
             <td>{{ $file->description }}</td>
             <td>
                 @if($file->thumbnail)
-                <img src="{{ asset('/storage/uploaded_files/' . pathinfo($file->path, PATHINFO_FILENAME) . '.jpg') }}" width='50px' alt="Изображение">
+                <img src="{{ asset('/storage/uploaded_files/images/' . pathinfo($file->path, PATHINFO_FILENAME) . '.jpg') }}" width='50px' alt="Image">
                 @else
                 No Thumbnail
                 @endif

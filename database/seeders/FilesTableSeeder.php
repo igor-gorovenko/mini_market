@@ -20,13 +20,22 @@ class FilesTableSeeder extends Seeder
         // Очистить таблицу перед заполнением
         DB::table('files')->truncate();
 
-        $directory = storage_path('app/public/uploaded_files');
-        File::cleanDirectory($directory);
+        $baseDirectory = storage_path('app/public/uploaded_files');
+        $pdfDirectory = $baseDirectory . '/pdf';
+        $imageDirectory = $baseDirectory . '/images';
+
+        // Очистить папки перед заполнением
+        File::cleanDirectory($pdfDirectory);
+        File::cleanDirectory($imageDirectory);
+
+        // Создать подпапки, если они не существуют
+        File::makeDirectory($pdfDirectory, 0777, true, true);
+        File::makeDirectory($imageDirectory, 0777, true, true);
 
         for ($i = 0; $i < 10; $i++) {
             $fileName = $faker->word;
-            $pdfPath = $directory . '/' . $fileName . '.pdf';
-            $imagePath = $directory . '/' . $fileName . '.jpg';
+            $pdfPath = $pdfDirectory . '/' . $fileName . '.pdf';
+            $imagePath = $imageDirectory . '/' . $fileName . '.jpg';
 
             // Создать PDF
             $pdf = new TCPDF();
