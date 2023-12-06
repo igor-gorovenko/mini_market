@@ -84,9 +84,20 @@ class AdminController extends Controller
                 Storage::disk('public')->delete($file->thumbnail);
             }
 
-
             $thumbnailPath = $request->file('thumbnail')->storeAs('uploaded_files/images', $file->name . '.jpg', 'public');
             $file->update(['thumbnail' => $thumbnailPath]);
+        }
+
+        // Обработка загрузки нового PDF-файла (если был выбран новый)
+        if ($request->hasFile('path')) {
+            // Удаление предыдущего PDF-файла (если оно есть)
+            if ($file->path) {
+                Storage::disk('public')->delete($file->path);
+            }
+
+            // Сохранение нового PDF-файла
+            $pdfPath = $request->file('path')->storeAs('uploaded_files/pdf', $file->name . '.pdf', 'public');
+            $file->update(['path' => $pdfPath]);
         }
     }
 

@@ -56,7 +56,7 @@
 
                         <div class="form-group">
                             <label for="path">Path:</label>
-                            <input type="text" name="path" class="form-control" value="{{ old('path', $file->path) }}" required>
+                            <input type="file" name="path" class="form-control">
                         </div>
 
                         <button type="submit" class="btn btn-primary">Update File</button>
