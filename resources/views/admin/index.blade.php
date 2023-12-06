@@ -4,7 +4,7 @@
 
 <h1>Admin Dashboard</h1>
 
-<div>Files</div>
+<div><a href="{{ route('admin.files.list') }}">Files</a></div>
 <div>Users</div>
 <div>Settings</div>
 
