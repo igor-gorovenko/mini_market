@@ -27,13 +27,16 @@ Route::middleware(['admin'])->prefix('/admin')->group(function () {
 
     // Users
     Route::prefix('/users')->group(function () {
+
         Route::get('/', [AdminController::class, 'users'])->name('admin.users.list');
+
         Route::get('/create', [AdminController::class, 'createUser'])->name('admin.users.create');
         Route::get('/store', [AdminController::class, 'storeUser']);
 
-        Route::get('{id}', [AdminController::class, 'showUser'])
+        Route::get('{name}', [AdminController::class, 'showUser'])
             ->name('admin.users.show')
-            ->where('id', '[0-9]+');
+            ->where('name', '[a-zA-Z0-9_ -]+'); // Добавлен пробел для имен
+
         Route::get('/{name}/edit', [AdminController::class, 'editUser'])->name('admin.users.edit')->where('name', '[a-zA-Z0-9_-]+');
         Route::post('/{name}/edit', [AdminController::class, 'updateUser'])->where('name', '[a-zA-Z0-9_-]+');
 

@@ -125,10 +125,9 @@ class AdminController extends Controller
         return view('admin.users.list', compact('users'));
     }
 
-    public function showUser($id)
+    public function showUser($name)
     {
-
-        $user = User::find($id);
+        $user = User::where('name', $name)->first();
 
         if (!$user) {
             abort(404);
