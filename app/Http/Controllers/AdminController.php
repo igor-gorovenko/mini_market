@@ -32,10 +32,6 @@ class AdminController extends Controller
         return view('admin.files.show', compact('file'));
     }
 
-    public function create()
-    {
-        return view('admin.files.create');
-    }
 
     public function edit(Request $request, $name)
     {
@@ -55,6 +51,23 @@ class AdminController extends Controller
         $file = File::where('name', $name)->firstOrFail();
         $this->validateAndSaveFile($request, $file);
         return redirect()->route('admin.files.show', ['name' => $file->name])->with('success', 'File updated');
+    }
+
+    public function delete($name)
+    {
+        $file = File::where('name', $name)->firstOrFail();
+
+        if ($file->thumbnail && Storage::disk('public')->exists($file->thumbnail)) {
+            Storage::disk('public')->delete($file->thumbnail);
+        }
+
+        if ($file->path && Storage::disk('public')->exists($file->path)) {
+            Storage::disk('public')->delete($file->path);
+        }
+
+        $file->delete();
+
+        return redirect()->route('admin.files.list')->with('success', 'file deleted');
     }
 
     private function validateAndSaveFile(Request $request, File $file)
@@ -84,7 +97,7 @@ class AdminController extends Controller
                 Storage::disk('public')->delete($file->thumbnail);
             }
 
-            $thumbnailPath = $request->file('thumbnail')->storeAs('uploaded_files/images', $file->name . '.jpg', 'public');
+            $thumbnailPath = $request->file('thumbnail')->storeAs('uploaded_files/images', $request->input('name') . '.jpg', 'public');
             $file->update(['thumbnail' => $thumbnailPath]);
         }
 
@@ -96,15 +109,8 @@ class AdminController extends Controller
             }
 
             // Сохранение нового PDF-файла
-            $pdfPath = $request->file('path')->storeAs('uploaded_files/pdf', $file->name . '.pdf', 'public');
+            $pdfPath = $request->file('path')->storeAs('uploaded_files/pdf', $request->input('name') . '.pdf', 'public');
             $file->update(['path' => $pdfPath]);
         }
-    }
-
-    public function delete($name)
-    {
-        $file = File::where('name', $name)->firstOrFail();
-
-        return view('admin.files.delete', compact('file'));
     }
 }

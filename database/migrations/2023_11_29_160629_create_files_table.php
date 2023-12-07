@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('thumbnail')->nullable();
-            $table->string('path');
-            $table->double('price', 8, 2);
+            $table->string('path')->nullable();
+            $table->double('price', 8, 2)->nullable();
             $table->date('dates')->nullable();
             $table->timestamps();
         });

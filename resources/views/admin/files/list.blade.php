@@ -5,7 +5,13 @@
 <div>
     <a href="{{ route('admin.index') }}">Back</a>
 </div>
-<h1>List files</h1>
+<div class="mt-2 mb-2">
+    <div class="d-flex justify-content-between align-items-center">
+        <h1>List files</h1>
+        <a href="{{ route('admin.files.create') }}" class="btn btn-outline-primary">Create New File</a>
+    </div>
+</div>
+
 <table class="table">
     <thead>
         <tr>

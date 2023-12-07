@@ -21,6 +21,10 @@
         <div>
             <a href="{{ route('admin.files.edit', ['name' => $file->name]) }}">Edit</a>
         </div>
+
+        <div>
+            <a href="{{ route('admin.files.delete', ['name' => $file->name]) }}">Delete</a>
+        </div>
     </div>
 </div>
 
