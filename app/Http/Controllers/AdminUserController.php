@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+
 use App\Models\User;
+
 
 class AdminUserController extends Controller
 {
@@ -23,6 +26,29 @@ class AdminUserController extends Controller
         }
 
         return view('admin.users.show', compact('user'));
+    }
+
+    public function create()
+    {
+        return view('admin.users.create');
+    }
+
+    public function store(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required|max:255',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:6',
+        ]);
+
+        // Создание нового пользователя
+        $user = User::create([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'password' => Hash::make($request->input('password')),
+        ]);
+
+        return redirect()->route('admin.users.show', ['name' => $user->name])->with('success', 'User created');
     }
 
     public function edit($name)
