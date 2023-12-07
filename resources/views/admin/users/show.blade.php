@@ -12,7 +12,7 @@
     <div>Id: {{ $user->id }}</div>
     <div>Email: {{ $user->email }}</div>
     <div>Updated: {{ $user->updated_at }}</div>
-    <div>Admin: {{ $user->is_admin == 1 ? 'Yes' : 'No' }}</div>
+    <div>Role: {{ $user->is_admin == 1 ? 'Admin' : 'User' }}</div>
     <div>
         <h3>Actions</h3>
         <a href="{{ route('admin.users.edit', ['name' => $user->name]) }}" class="btn btn-outline-primary">Edit</a>

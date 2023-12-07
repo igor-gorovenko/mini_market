@@ -20,7 +20,7 @@
             <th>Name</th>
             <th>Email</th>
             <th>Updated</th>
-            <th>Admin</th>
+            <th>Role</th>
         </tr>
     </thead>
     <tbody>
@@ -30,7 +30,7 @@
             <td><a href="{{ route('admin.users.show', ['name' => $user->name]) }}">{{ $user->name }}</a></td>
             <td>{{ $user->email }}</td>
             <td>{{ $user->updated_at }}</td>
-            <td>{{ $user->is_admin == 1 ? 'Yes' : 'No' }}</td>
+            <td>{{ $user->is_admin == 1 ? 'Admin' : 'User' }}</td>
         </tr>
         @endforeach
     </tbody>
