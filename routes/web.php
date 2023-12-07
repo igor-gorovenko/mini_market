@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminFileController;
+use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\UserController;
 
 
@@ -14,37 +16,25 @@ Route::middleware(['admin'])->prefix('/admin')->group(function () {
 
     // Files
     Route::prefix('/files')->group(function () {
-        Route::get('/', [AdminController::class, 'files'])->name('admin.files.list');
-        Route::get('/create', [AdminController::class, 'create'])->name('admin.files.create');
-        Route::post('/store', [AdminController::class, 'store']);
-
-        Route::get('/{name}', [AdminController::class, 'show'])->name('admin.files.show')->where('name', '[a-zA-Z0-9_-]+');
-        Route::get('/{name}/edit', [AdminController::class, 'edit'])->name('admin.files.edit')->where('name', '[a-zA-Z0-9_-]+');
-        Route::post('/{name}/edit', [AdminController::class, 'update'])->where('name', '[a-zA-Z0-9_-]+');
-
-        Route::get('/{name}/delete', [AdminController::class, 'delete'])->where('name', '[a-zA-Z0-9_-]+');
+        Route::get('/', [AdminFileController::class, 'files'])->name('admin.files.list');
+        Route::get('/create', [AdminFileController::class, 'create'])->name('admin.files.create');
+        Route::post('/store', [AdminFileController::class, 'store']);
+        Route::get('/{name}', [AdminFileController::class, 'show'])->name('admin.files.show')->where('name', '[a-zA-Z0-9_-]+');
+        Route::get('/{name}/edit', [AdminFileController::class, 'edit'])->name('admin.files.edit')->where('name', '[a-zA-Z0-9_-]+');
+        Route::post('/{name}/edit', [AdminFileController::class, 'update'])->where('name', '[a-zA-Z0-9_-]+');
+        Route::get('/{name}/delete', [AdminFileController::class, 'destroy'])->name('admin.files.destoy')->where('name', '[a-zA-Z0-9_-]+');
     });
 
     // Users
     Route::prefix('/users')->group(function () {
-
-        Route::get('/', [AdminController::class, 'users'])->name('admin.users.list');
-
-        Route::get('/create', [AdminController::class, 'createUser'])->name('admin.users.create');
-        Route::get('/store', [AdminController::class, 'storeUser']);
-
-        Route::get('{name}', [AdminController::class, 'showUser'])
-            ->name('admin.users.show')
-            ->where('name', '[a-zA-Z0-9_ -]+'); // Добавлен пробел для имен
-
-        Route::get('/{name}/edit', [AdminController::class, 'editUser'])->name('admin.users.edit')->where('name', '[a-zA-Z0-9_-]+');
-        Route::post('/{name}/edit', [AdminController::class, 'updateUser'])->where('name', '[a-zA-Z0-9_-]+');
-
-        Route::get('/{name}/delete', [AdminController::class, 'deleteUser'])->where('name', '[a-zA-Z0-9_-]+');
+        Route::get('/', [AdminUserController::class, 'users'])->name('admin.users.list');
+        Route::get('/create', [AdminUserController::class, 'create'])->name('admin.users.create');
+        Route::get('/store', [AdminUserController::class, 'store']);
+        Route::get('{name}', [AdminUserController::class, 'show'])->name('admin.users.show')->where('name', '[a-zA-Z0-9_ -]+'); // Добавлен пробел для имен
+        Route::get('/{name}/edit', [AdminUserController::class, 'edit'])->name('admin.users.edit')->where('name', '[a-zA-Z0-9_-]+');
+        Route::post('/{name}/edit', [AdminUserController::class, 'update'])->where('name', '[a-zA-Z0-9_-]+');
+        Route::get('/{name}/delete', [AdminUserController::class, 'destroy'])->where('name', '[a-zA-Z0-9_-]+');
     });
-
-    //Settings
-    Route::get('/settings', [AdminController::class, 'settings'])->name('admin.settings');
 });
 
 Route::middleware(['user'])->group(function () {

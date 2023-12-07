@@ -23,7 +23,7 @@
         </div>
 
         <div>
-            <a href="{{ route('admin.files.delete', ['name' => $file->name]) }}">Delete</a>
+            <a href="#">Delete</a>
         </div>
     </div>
 </div>
