@@ -71,12 +71,14 @@ class AdminUserController extends Controller
         $this->validate($request, [
             'name' => 'required|max:255',
             'email' => 'required|email',
+            'is_admin' => 'required|boolean',
         ]);
 
         // Обновление данных в базе
         $user->update([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
+            'is_admin' => (int)$request->input('is_admin'),
         ]);
 
         return redirect()->route('admin.users.show', ['name' => $user->name])->with('success', 'User updated');

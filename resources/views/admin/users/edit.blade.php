@@ -26,6 +26,24 @@
         <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}">
     </div>
 
+    <div class="mb-3">
+        <label class="form-label">Role:</label>
+
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="is_admin" id="is_admin_yes" value="1" {{ $user->is_admin ? 'checked' : '' }}>
+            <label class="form-check-label" for="is_admin_yes">
+                Admin
+            </label>
+        </div>
+
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="is_admin" id="is_admin_no" value="0" {{ !$user->is_admin ? 'checked' : '' }}>
+            <label class="form-check-label" for="is_admin_no">
+                User
+            </label>
+        </div>
+    </div>
+
     <button type="submit" class="btn btn-primary">Save Changes</button>
 </form>
 
