@@ -31,6 +31,25 @@
         <input type="password" class="form-control" id="password" name="password">
     </div>
 
+
+    <div class="mb-3">
+        <label class="form-label">Role:</label>
+
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="is_admin" id="is_admin_yes" value="1">
+            <label class="form-check-label" for="is_admin_yes">
+                Admin
+            </label>
+        </div>
+
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="is_admin" id="is_admin_no" value="0" checked>
+            <label class="form-check-label" for="is_admin_no">
+                User
+            </label>
+        </div>
+    </div>
+
     <button type="submit" class="btn btn-primary">Create User</button>
 </form>
 

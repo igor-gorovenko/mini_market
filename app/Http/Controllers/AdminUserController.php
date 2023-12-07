@@ -39,6 +39,7 @@ class AdminUserController extends Controller
             'name' => 'required|max:255',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
+            'is_admin' => 'required|boolean',
         ]);
 
         // Создание нового пользователя
@@ -46,6 +47,7 @@ class AdminUserController extends Controller
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password')),
+            'is_admin' => (int)$request->input('is_admin'),
         ]);
 
         return redirect()->route('admin.users.list')->with('success', 'User created');
