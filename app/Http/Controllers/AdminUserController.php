@@ -48,7 +48,7 @@ class AdminUserController extends Controller
             'password' => Hash::make($request->input('password')),
         ]);
 
-        return redirect()->route('admin.users.show', ['name' => $user->name])->with('success', 'User created');
+        return redirect()->route('admin.users.list')->with('success', 'User created');
     }
 
     public function edit($name)
@@ -80,5 +80,14 @@ class AdminUserController extends Controller
         ]);
 
         return redirect()->route('admin.users.show', ['name' => $user->name])->with('success', 'User updated');
+    }
+
+    public function destroy($name)
+    {
+        $user = User::where('name', $name)->firstOrFail();
+
+        $user->delete();
+
+        return redirect()->route('admin.users.list')->with('success', 'user deleted');
     }
 }
