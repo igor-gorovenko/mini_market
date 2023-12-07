@@ -21,7 +21,7 @@ Route::middleware(['admin'])->prefix('/admin')->group(function () {
         Route::post('/store', [AdminFileController::class, 'store']);
         Route::get('/{name}', [AdminFileController::class, 'show'])->name('admin.files.show')->where('name', '[a-zA-Z0-9_-]+');
         Route::get('/{name}/edit', [AdminFileController::class, 'edit'])->name('admin.files.edit')->where('name', '[a-zA-Z0-9_-]+');
-        Route::post('/{name}/edit', [AdminFileController::class, 'update'])->where('name', '[a-zA-Z0-9_-]+');
+        Route::put('/{name}/edit', [AdminFileController::class, 'update'])->where('name', '[a-zA-Z0-9_-]+');
         Route::get('/{name}/delete', [AdminFileController::class, 'destroy'])->name('admin.files.destoy')->where('name', '[a-zA-Z0-9_-]+');
     });
 
@@ -31,9 +31,9 @@ Route::middleware(['admin'])->prefix('/admin')->group(function () {
         Route::get('/create', [AdminUserController::class, 'create'])->name('admin.users.create');
         Route::get('/store', [AdminUserController::class, 'store']);
         Route::get('{name}', [AdminUserController::class, 'show'])->name('admin.users.show')->where('name', '[a-zA-Z0-9_ -]+'); // Добавлен пробел для имен
-        Route::get('/{name}/edit', [AdminUserController::class, 'edit'])->name('admin.users.edit')->where('name', '[a-zA-Z0-9_-]+');
-        Route::post('/{name}/edit', [AdminUserController::class, 'update'])->where('name', '[a-zA-Z0-9_-]+');
-        Route::get('/{name}/delete', [AdminUserController::class, 'destroy'])->where('name', '[a-zA-Z0-9_-]+');
+        Route::get('/{name}/edit', [AdminUserController::class, 'edit'])->name('admin.users.edit')->where('name', '[a-zA-Z0-9_ -]+');
+        Route::put('/{name}/edit', [AdminUserController::class, 'update'])->name('admin.users.update')->where('name', '[a-zA-Z0-9_ -]+');
+        Route::get('/{name}/delete', [AdminUserController::class, 'destroy'])->name('admin.users.destoy')->where('name', '[a-zA-Z0-9_ -]+');
     });
 });
 
