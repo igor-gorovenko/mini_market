@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\File;
 use Illuminate\Support\Facades\Storage;
+
+use App\Models\File;
+use App\Models\User;
 
 class AdminController extends Controller
 {
@@ -112,5 +114,26 @@ class AdminController extends Controller
             $pdfPath = $request->file('path')->storeAs('uploaded_files/pdf', $request->input('name') . '.pdf', 'public');
             $file->update(['path' => $pdfPath]);
         }
+    }
+
+    // Users
+
+    public function users()
+    {
+        $users = User::all();
+
+        return view('admin.users.list', compact('users'));
+    }
+
+    public function showUser($id)
+    {
+
+        $user = User::find($id);
+
+        if (!$user) {
+            abort(404);
+        }
+
+        return view('admin.users.show', compact('user'));
     }
 }

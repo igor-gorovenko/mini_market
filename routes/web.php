@@ -16,21 +16,28 @@ Route::middleware(['admin'])->prefix('/admin')->group(function () {
     Route::prefix('/files')->group(function () {
         Route::get('/', [AdminController::class, 'files'])->name('admin.files.list');
         Route::get('/create', [AdminController::class, 'create'])->name('admin.files.create');
-        Route::post('/store', [AdminController::class, 'store'])->name('admin.files.store');
+        Route::post('/store', [AdminController::class, 'store']);
 
         Route::get('/{name}', [AdminController::class, 'show'])->name('admin.files.show')->where('name', '[a-zA-Z0-9_-]+');
         Route::get('/{name}/edit', [AdminController::class, 'edit'])->name('admin.files.edit')->where('name', '[a-zA-Z0-9_-]+');
-        Route::post('/{name}/edit', [AdminController::class, 'update'])->name('admin.files.update')->where('name', '[a-zA-Z0-9_-]+');
+        Route::post('/{name}/edit', [AdminController::class, 'update'])->where('name', '[a-zA-Z0-9_-]+');
 
-        Route::get('/{name}/delete', [AdminController::class, 'delete'])->name('admin.files.delete')->where('name', '[a-zA-Z0-9_-]+');
+        Route::get('/{name}/delete', [AdminController::class, 'delete'])->where('name', '[a-zA-Z0-9_-]+');
     });
 
     // Users
     Route::prefix('/users')->group(function () {
-        Route::get('/', [AdminController::class, 'users'])->name('admin.users');
+        Route::get('/', [AdminController::class, 'users'])->name('admin.users.list');
         Route::get('/create', [AdminController::class, 'createUser'])->name('admin.users.create');
-        Route::get('/{name}', [AdminController::class, 'editUser'])->name('admin.users.edit');
-        Route::get('/{name}/delete', [AdminController::class, 'deleteUser'])->name('admin.users.delete');
+        Route::get('/store', [AdminController::class, 'storeUser']);
+
+        Route::get('{id}', [AdminController::class, 'showUser'])
+            ->name('admin.users.show')
+            ->where('id', '[0-9]+');
+        Route::get('/{name}/edit', [AdminController::class, 'editUser'])->name('admin.users.edit')->where('name', '[a-zA-Z0-9_-]+');
+        Route::post('/{name}/edit', [AdminController::class, 'updateUser'])->where('name', '[a-zA-Z0-9_-]+');
+
+        Route::get('/{name}/delete', [AdminController::class, 'deleteUser'])->where('name', '[a-zA-Z0-9_-]+');
     });
 
     //Settings
