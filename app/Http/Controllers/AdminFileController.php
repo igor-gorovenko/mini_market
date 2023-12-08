@@ -29,15 +29,23 @@ class AdminFileController extends Controller
         return view('admin.files.show', compact('file'));
     }
 
-
-    public function edit(Request $request, $name)
+    public function create()
     {
-        $file = File::where('name', $name)->firstOrFail();
+        return view('admin.fiels.create');
+    }
 
-        // Проверка, была ли отправлена форма редактирования
-        if (request()->isMethod('post')) {
-            $this->validateAndSaveFile($request, $file);
-            return redirect()->route('admin.files.show', ['name' => $file->name])->with('success', 'File updated');
+    public function store()
+    {
+        //
+    }
+
+
+    public function edit($name)
+    {
+        $file = File::where('name', $name)->first();
+
+        if (!$file) {
+            abort(404);
         }
 
         return view('admin.files.edit', compact('file'));
@@ -45,8 +53,38 @@ class AdminFileController extends Controller
 
     public function update(Request $request, $name)
     {
-        $file = File::where('name', $name)->firstOrFail();
-        $this->validateAndSaveFile($request, $file);
+        $file = File::where('name', $name)->first();
+
+        // Валидация
+        $this->validate($request, [
+            'name' => 'required|max:255',
+            'description' => 'nullable',
+            'price' => 'required|numeric',
+            'dates' => 'nullable|date',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Максимальный размер 2Мб
+
+        ]);
+
+        // Обновление данных в базе
+        $file->update([
+            'name' => $request->input('name'),
+            'description' => $request->input('description'),
+            'price' => $request->input('price'),
+            'dates' => $request->input('dates'),
+        ]);
+
+
+        // Загрузка изображения, если оно было прикреплено
+        if ($request->hasFile('thumbnail')) {
+            // Предварительное удаление старого изображения (если не сделано выше)
+            if ($file->thumbnail && Storage::disk('public')->exists($file->thumbnail)) {
+                Storage::disk('public')->delete($file->thumbnail);
+            }
+            $thumbnailPath = $request->file('thumbnail')->store('uploaded_files/images', 'public');
+            $file->thumbnail = $thumbnailPath;
+            $file->save();
+        }
+
         return redirect()->route('admin.files.show', ['name' => $file->name])->with('success', 'File updated');
     }
 
@@ -65,49 +103,5 @@ class AdminFileController extends Controller
         $file->delete();
 
         return redirect()->route('admin.files.list')->with('success', 'file deleted');
-    }
-
-    private function validateAndSaveFile(Request $request, File $file)
-    {
-        // Валидация данных
-        $this->validate($request, [
-            'name' => 'required|max:255',
-            'description' => 'nullable',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'path' => 'required',
-            'price' => 'required|numeric',
-            'dates' => 'nullable|date',
-        ]);
-
-        // Обновление данных в базе
-        $file->update([
-            'name' => $request->input('name'),
-            'description' => $request->input('description'),
-            'price' => $request->input('price'),
-            'dates' => $request->input('dates'),
-        ]);
-
-        // Обработка загрузки нового изображения (если было выбрано новое)
-        if ($request->hasFile('thumbnail')) {
-            // Удаление предыдущего изображения (если оно есть)
-            if ($file->thumbnail) {
-                Storage::disk('public')->delete($file->thumbnail);
-            }
-
-            $thumbnailPath = $request->file('thumbnail')->storeAs('uploaded_files/images', $request->input('name') . '.jpg', 'public');
-            $file->update(['thumbnail' => $thumbnailPath]);
-        }
-
-        // Обработка загрузки нового PDF-файла (если был выбран новый)
-        if ($request->hasFile('path')) {
-            // Удаление предыдущего PDF-файла (если оно есть)
-            if ($file->path) {
-                Storage::disk('public')->delete($file->path);
-            }
-
-            // Сохранение нового PDF-файла
-            $pdfPath = $request->file('path')->storeAs('uploaded_files/pdf', $request->input('name') . '.pdf', 'public');
-            $file->update(['path' => $pdfPath]);
-        }
     }
 }

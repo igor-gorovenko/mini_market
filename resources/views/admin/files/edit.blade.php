@@ -16,9 +16,9 @@
                     </div>
                     @endif
 
-                    <form action="{{ route('admin.files.edit', ['name' => $file->name]) }}" method="post" enctype="multipart/form-data">
-                        {{ csrf_field() }}
-                        {{ method_field('POST') }}
+                    <form action="{{ route('admin.files.update', ['name' => $file->name]) }}" method="post" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
 
                         <div class="form-group">
                             <label for="name">Name:</label>
@@ -31,20 +31,6 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="thumbnail">Thumbnail Preview:</label>
-                            @if($file->thumbnail)
-                            <img src="{{ asset('/storage/uploaded_files/images/' . pathinfo($file->path, PATHINFO_FILENAME) . '.jpg') }}" width='50px' alt="Image">
-                            @else
-                            <p>No thumbnail available</p>
-                            @endif
-                        </div>
-
-                        <div class="form-group">
-                            <label for="thumbnail">Thumbnail:</label>
-                            <input type="file" name="thumbnail" class="form-control">
-                        </div>
-
-                        <div class="form-group">
                             <label for="price">Price:</label>
                             <input type="number" name="price" class="form-control" value="{{ old('price', $file->price) }}" required>
                         </div>
@@ -54,10 +40,13 @@
                             <input type="text" name="dates" class="form-control" value="{{ old('dates', $file->dates) }}">
                         </div>
 
+                        <!-- Загрузка превью -->
                         <div class="form-group">
-                            <label for="path">Path:</label>
-                            <input type="file" name="path" class="form-control">
+                            <label for="thumbnail">Thumbnail:</label>
+                            <input type="file" name="thumbnail" id="thumbnail" class="form-control">
                         </div>
+
+
 
                         <button type="submit" class="btn btn-primary">Update File</button>
                     </form>

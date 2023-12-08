@@ -17,12 +17,11 @@ class FilesTableSeeder extends Seeder
     public function run(): void
     {
         $faker = Faker::create();
-        // Очистить таблицу перед заполнением
         DB::table('files')->truncate();
 
-        $baseDirectory = storage_path('app/public/uploaded_files');
-        $pdfDirectory = $baseDirectory . '/pdf';
-        $imageDirectory = $baseDirectory . '/images';
+        $baseDirectory = storage_path('app/public/');
+        $pdfDirectory = $baseDirectory . '/uploaded_files/pdf';
+        $imageDirectory = $baseDirectory . '/uploaded_files/images';
 
         // Очистить папки перед заполнением
         File::cleanDirectory($pdfDirectory);
@@ -74,8 +73,8 @@ class FilesTableSeeder extends Seeder
             DB::table('files')->insert([
                 'name' => $fileName,
                 'description' => $faker->sentence,
-                'thumbnail' => $imagePath,
-                'path' => $pdfPath,
+                'thumbnail' => str_replace($baseDirectory . '/', '', $imagePath),
+                'path' => str_replace($baseDirectory . '/', '', $pdfPath),
                 'price' => $faker->randomFloat(2, 0, 100),
                 'dates' => $faker->date(),
                 'created_at' => now(),

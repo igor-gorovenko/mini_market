@@ -16,9 +16,9 @@
     <thead>
         <tr>
             <th>ID</th>
+            <th>Thumbnail</th>
             <th>Name</th>
             <th>Description</th>
-            <th>Thumbnail</th>
             <th>Price</th>
             <th>Dates</th>
         </tr>
@@ -27,15 +27,11 @@
         @foreach ($files as $file)
         <tr>
             <td>{{ $file->id }}</td>
+            <td>
+                <img src="{{ asset('storage/' . $file->thumbnail) }}" width='50px' alt="Image">
+            </td>
             <td><a href="{{ route('admin.files.show', ['name' => $file->name]) }}">{{ $file->name }}</a></td>
             <td>{{ $file->description }}</td>
-            <td>
-                @if($file->thumbnail)
-                <img src="{{ asset('/storage/uploaded_files/images/' . pathinfo($file->path, PATHINFO_FILENAME) . '.jpg') }}" width='50px' alt="Image">
-                @else
-                No Thumbnail
-                @endif
-            </td>
             <td>${{ $file->price }}</td>
             <td>{{ $file->dates }}</td>
         </tr>
