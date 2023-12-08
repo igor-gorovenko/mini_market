@@ -31,12 +31,49 @@ class AdminFileController extends Controller
 
     public function create()
     {
-        return view('admin.fiels.create');
+        return view('admin.files.create');
     }
 
-    public function store()
+    public function store(Request $request)
     {
-        //
+        // Валидация
+        $this->validate($request, [
+            'name' => 'required|max:255',
+            'description' => 'nullable',
+            'price' => 'required|numeric',
+            'dates' => 'nullable|date',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Максимальный размер 2Мб
+            'path' => 'nullable|mimes:pdf|max:2048',
+        ]);
+
+        $file = File::create([
+            'name' => $request->input('name'),
+            'description' => $request->input('description'),
+            'price' => $request->input('price'),
+            'dates' => $request->input('dates'),
+        ]);
+
+        // Загрузка изображения, если оно было прикреплено
+        if ($request->hasFile('thumbnail')) {
+            // Предварительное удаление старого изображения (если не сделано выше)
+            if ($file->thumbnail && Storage::disk('public')->exists($file->thumbnail)) {
+                Storage::disk('public')->delete($file->thumbnail);
+            }
+            $thumbnailPath = $request->file('thumbnail')->store('uploaded_files/images', 'public');
+            $file->thumbnail = $thumbnailPath;
+            $file->save();
+        }
+
+        if ($request->hasFile('path')) {
+            if ($file->path && Storage::disk('public')->exists($file->path)) {
+                Storage::disk('public')->delete($file->path);
+            }
+            $pdfPath = $request->file('path')->store('uploaded_files/pdf', 'public');
+            $file->path = $pdfPath;
+            $file->save();
+        }
+
+        return redirect()->route('admin.files.list')->with('success', 'File created');
     }
 
 
