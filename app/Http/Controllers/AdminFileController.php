@@ -62,7 +62,7 @@ class AdminFileController extends Controller
             'price' => 'required|numeric',
             'dates' => 'nullable|date',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Максимальный размер 2Мб
-
+            'path' => 'nullable|mimes:pdf|max:2048',
         ]);
 
         // Обновление данных в базе
@@ -73,7 +73,6 @@ class AdminFileController extends Controller
             'dates' => $request->input('dates'),
         ]);
 
-
         // Загрузка изображения, если оно было прикреплено
         if ($request->hasFile('thumbnail')) {
             // Предварительное удаление старого изображения (если не сделано выше)
@@ -82,6 +81,15 @@ class AdminFileController extends Controller
             }
             $thumbnailPath = $request->file('thumbnail')->store('uploaded_files/images', 'public');
             $file->thumbnail = $thumbnailPath;
+            $file->save();
+        }
+
+        if ($request->hasFile('path')) {
+            if ($file->path && Storage::disk('public')->exists($file->path)) {
+                Storage::disk('public')->delete($file->path);
+            }
+            $pdfPath = $request->file('path')->store('uploaded_files/pdf', 'public');
+            $file->path = $pdfPath;
             $file->save();
         }
 

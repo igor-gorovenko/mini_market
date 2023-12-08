@@ -40,13 +40,17 @@
                             <input type="text" name="dates" class="form-control" value="{{ old('dates', $file->dates) }}">
                         </div>
 
-                        <!-- Загрузка превью -->
+                        <!-- Загрузка файлов -->
+                        <h3>Downloads:</h3>
                         <div class="form-group">
                             <label for="thumbnail">Thumbnail:</label>
                             <input type="file" name="thumbnail" id="thumbnail" class="form-control">
                         </div>
 
-
+                        <div class="form-group">
+                            <label for="path">PDF:</label>
+                            <input type="file" name="path" id="path" class="form-control">
+                        </div>
 
                         <button type="submit" class="btn btn-primary">Update File</button>
                     </form>
