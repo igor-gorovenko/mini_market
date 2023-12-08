@@ -53,25 +53,8 @@ class AdminFileController extends Controller
             'dates' => $request->input('dates'),
         ]);
 
-        // Загрузка изображения, если оно было прикреплено
-        if ($request->hasFile('thumbnail')) {
-            // Предварительное удаление старого изображения (если не сделано выше)
-            if ($file->thumbnail && Storage::disk('public')->exists($file->thumbnail)) {
-                Storage::disk('public')->delete($file->thumbnail);
-            }
-            $thumbnailPath = $request->file('thumbnail')->store('uploaded_files/images', 'public');
-            $file->thumbnail = $thumbnailPath;
-            $file->save();
-        }
-
-        if ($request->hasFile('path')) {
-            if ($file->path && Storage::disk('public')->exists($file->path)) {
-                Storage::disk('public')->delete($file->path);
-            }
-            $pdfPath = $request->file('path')->store('uploaded_files/pdf', 'public');
-            $file->path = $pdfPath;
-            $file->save();
-        }
+        $this->uploadFile($file, 'thumbnail', 'uploaded_files/images');
+        $this->uploadFile($file, 'path', 'uploaded_files/pdf');
 
         return redirect()->route('admin.files.list')->with('success', 'File created');
     }
@@ -110,25 +93,8 @@ class AdminFileController extends Controller
             'dates' => $request->input('dates'),
         ]);
 
-        // Загрузка изображения, если оно было прикреплено
-        if ($request->hasFile('thumbnail')) {
-            // Предварительное удаление старого изображения (если не сделано выше)
-            if ($file->thumbnail && Storage::disk('public')->exists($file->thumbnail)) {
-                Storage::disk('public')->delete($file->thumbnail);
-            }
-            $thumbnailPath = $request->file('thumbnail')->store('uploaded_files/images', 'public');
-            $file->thumbnail = $thumbnailPath;
-            $file->save();
-        }
-
-        if ($request->hasFile('path')) {
-            if ($file->path && Storage::disk('public')->exists($file->path)) {
-                Storage::disk('public')->delete($file->path);
-            }
-            $pdfPath = $request->file('path')->store('uploaded_files/pdf', 'public');
-            $file->path = $pdfPath;
-            $file->save();
-        }
+        $this->uploadFile($file, 'thumbnail', 'uploaded_files/images');
+        $this->uploadFile($file, 'path', 'uploaded_files/pdf');
 
         return redirect()->route('admin.files.show', ['name' => $file->name])->with('success', 'File updated');
     }
@@ -141,6 +107,7 @@ class AdminFileController extends Controller
             Storage::disk('public')->delete($file->thumbnail);
         }
 
+
         if ($file->path && Storage::disk('public')->exists($file->path)) {
             Storage::disk('public')->delete($file->path);
         }
@@ -148,5 +115,18 @@ class AdminFileController extends Controller
         $file->delete();
 
         return redirect()->route('admin.files.list')->with('success', 'file deleted');
+    }
+
+    private function uploadFile($file, $fieldName, $storagePath)
+    {
+        if (request()->hasFile($fieldName)) {
+            if ($file->$fieldName && Storage::disk('public')->exists($file->$fieldName)) {
+                Storage::disk('public')->delete($file->$fieldName);
+            }
+
+            $filePath = request()->file($fieldName)->store($storagePath, 'public');
+            $file->$fieldName = $filePath;
+            $file->save();
+        }
     }
 }
