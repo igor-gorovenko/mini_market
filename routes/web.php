@@ -8,6 +8,7 @@ use App\Http\Controllers\AdminFileController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\UserController;
 
+
 Auth::routes();
 
 Route::get('/', function () {
