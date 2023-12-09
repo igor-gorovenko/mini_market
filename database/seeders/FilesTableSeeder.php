@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use Illuminate\Support\Facades\File as File;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+
 use Faker\Factory as Faker;
 use Intervention\Image\ImageManagerStatic as Image;
 use TCPDF;
@@ -32,7 +34,8 @@ class FilesTableSeeder extends Seeder
         File::makeDirectory($imageDirectory, 0777, true, true);
 
         for ($i = 0; $i < 10; $i++) {
-            $fileName = $faker->word;
+            $fileName = $faker->words(rand(2, 3), true);
+            $slug = Str::slug($fileName, '-');
             $pdfPath = $pdfDirectory . '/' . $fileName . '.pdf';
             $imagePath = $imageDirectory . '/' . $fileName . '.jpg';
 
@@ -77,6 +80,7 @@ class FilesTableSeeder extends Seeder
                 'path' => str_replace($baseDirectory . '/', '', $pdfPath),
                 'price' => $faker->randomFloat(2, 0, 100),
                 'dates' => $faker->date(),
+                'slug' => $slug,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

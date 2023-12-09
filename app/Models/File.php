@@ -18,5 +18,6 @@ class File extends Model
         'path',
         'price',
         'dates',
+        'slug',
     ];
 }

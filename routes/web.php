@@ -19,10 +19,10 @@ Route::middleware(['admin'])->prefix('/admin')->group(function () {
         Route::get('/', [AdminFileController::class, 'files'])->name('admin.files.list');
         Route::get('/create', [AdminFileController::class, 'create'])->name('admin.files.create');
         Route::post('/store', [AdminFileController::class, 'store'])->name('admin.files.store');
-        Route::get('/{name}', [AdminFileController::class, 'show'])->name('admin.files.show')->where('name', '[a-zA-Z0-9_ -]+');
-        Route::get('/{name}/edit', [AdminFileController::class, 'edit'])->name('admin.files.edit')->where('name', '[a-zA-Z0-9_ -]+');
-        Route::put('/{name}/update', [AdminFileController::class, 'update'])->name('admin.files.update')->where('name', '[a-zA-Z0-9_ -]+');
-        Route::get('/{name}/delete', [AdminFileController::class, 'destroy'])->name('admin.files.destroy')->where('name', '[a-zA-Z0-9_ -]+');
+        Route::get('/{slug}', [AdminFileController::class, 'show'])->name('admin.files.show')->where('slug', '[a-zA-Z0-9_-]+');
+        Route::get('/{slug}/edit', [AdminFileController::class, 'edit'])->name('admin.files.edit')->where('slug', '[a-zA-Z0-9_-]+');
+        Route::put('/{slug}/update', [AdminFileController::class, 'update'])->name('admin.files.update')->where('slug', '[a-zA-Z0-9_-]+');
+        Route::get('/{slug}/delete', [AdminFileController::class, 'destroy'])->name('admin.files.destroy')->where('slug', '[a-zA-Z0-9_-]+');
     });
 
     // Users

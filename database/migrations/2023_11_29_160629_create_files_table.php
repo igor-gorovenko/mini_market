@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('path')->nullable();
             $table->double('price', 8, 2)->nullable();
             $table->date('dates')->nullable();
+            $table->string('slug')->nullable();
             $table->timestamps();
         });
     }

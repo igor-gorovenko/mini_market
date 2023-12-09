@@ -22,8 +22,8 @@
 
         <div>
             <h3>Actions</h3>
-            <a href="{{ route('admin.files.edit', ['name' => $file->name]) }}" class="btn btn-outline-primary">Edit</a>
-            <a href="{{ route('admin.files.destroy', ['name' => $file->name]) }}" class="btn btn-outline-danger">Delete</a>
+            <a href="{{ route('admin.files.edit', ['slug' => $file->slug]) }}" class="btn btn-outline-primary">Edit</a>
+            <a href="{{ route('admin.files.destroy', ['slug' => $file->slug]) }}" class="btn btn-outline-danger">Delete</a>
         </div>
     </div>
 </div>

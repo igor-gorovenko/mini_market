@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 use App\Models\File;
 
@@ -18,9 +19,9 @@ class AdminFileController extends Controller
         return view('admin.files.list', compact('files'));
     }
 
-    public function show($name)
+    public function show($slug)
     {
-        $file = File::where('name', $name)->firstOrFail();
+        $file = File::where('slug', $slug)->firstOrFail();
 
         if (!$file) {
             abort(404);
@@ -51,6 +52,7 @@ class AdminFileController extends Controller
             'description' => $request->input('description'),
             'price' => $request->input('price'),
             'dates' => $request->input('dates'),
+            'slug' => Str::slug($request->input('name'), '-'),
         ]);
 
         $this->uploadFile($file, 'thumbnail', 'uploaded_files/images');
@@ -60,9 +62,9 @@ class AdminFileController extends Controller
     }
 
 
-    public function edit($name)
+    public function edit($slug)
     {
-        $file = File::where('name', $name)->first();
+        $file = File::where('slug', $slug)->first();
 
         if (!$file) {
             abort(404);
@@ -71,9 +73,9 @@ class AdminFileController extends Controller
         return view('admin.files.edit', compact('file'));
     }
 
-    public function update(Request $request, $name)
+    public function update(Request $request, $slug)
     {
-        $file = File::where('name', $name)->first();
+        $file = File::where('slug', $slug)->first();
 
         // Валидация
         $this->validate($request, [
@@ -91,17 +93,18 @@ class AdminFileController extends Controller
             'description' => $request->input('description'),
             'price' => $request->input('price'),
             'dates' => $request->input('dates'),
+            'slug' => Str::slug($request->input('name'), '-'),
         ]);
 
         $this->uploadFile($file, 'thumbnail', 'uploaded_files/images');
         $this->uploadFile($file, 'path', 'uploaded_files/pdf');
 
-        return redirect()->route('admin.files.show', ['name' => $file->name])->with('success', 'File updated');
+        return redirect()->route('admin.files.show', ['slug' => $file->slug])->with('success', 'File updated');
     }
 
-    public function destroy($name)
+    public function destroy($slug)
     {
-        $file = File::where('name', $name)->firstOrFail();
+        $file = File::where('slug', $slug)->firstOrFail();
 
         if ($file->thumbnail && Storage::disk('public')->exists($file->thumbnail)) {
             Storage::disk('public')->delete($file->thumbnail);

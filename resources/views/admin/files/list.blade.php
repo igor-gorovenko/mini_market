@@ -30,7 +30,7 @@
             <td>
                 <img src="{{ asset('storage/' . $file->thumbnail) }}" width='50px' alt="Image">
             </td>
-            <td><a href="{{ route('admin.files.show', ['name' => $file->name]) }}">{{ $file->name }}</a></td>
+            <td><a href="{{ route('admin.files.show', ['slug' => $file->slug]) }}">{{ $file->name }}</a></td>
             <td>{{ $file->description }}</td>
             <td>${{ $file->price }}</td>
             <td>{{ $file->dates }}</td>

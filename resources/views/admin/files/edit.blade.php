@@ -2,7 +2,7 @@
 
 @section('content')
 <div>
-    <a href="{{ route('admin.files.show', ['name' => $file->name]) }}">Back</a>
+    <a href="{{ route('admin.files.show', ['slug' => $file->slug]) }}">Back</a>
 </div>
 <h1>Edit page</h1>
 <div class="container">
@@ -16,7 +16,7 @@
                     </div>
                     @endif
 
-                    <form action="{{ route('admin.files.update', ['name' => $file->name]) }}" method="post" enctype="multipart/form-data">
+                    <form action="{{ route('admin.files.update', ['slug' => $file->slug]) }}" method="post" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
