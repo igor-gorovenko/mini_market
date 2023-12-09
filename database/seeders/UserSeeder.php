@@ -19,6 +19,8 @@ class UserSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'user@example.com',
             'password' => 'test1234',
+            'is_admin' => false,
+            'slug' => 'test-user',
         ]);
 
         User::create([
@@ -26,6 +28,7 @@ class UserSeeder extends Seeder
             'email' => 'admin@example.com',
             'password' => 'test1234',
             'is_admin' => true,
+            'slug' => 'admin-user'
         ]);
     }
 }

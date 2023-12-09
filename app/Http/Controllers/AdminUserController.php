@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 use App\Models\User;
 
@@ -17,9 +18,9 @@ class AdminUserController extends Controller
         return view('admin.users.list', compact('users'));
     }
 
-    public function show($name)
+    public function show($slug)
     {
-        $user = User::where('name', $name)->first();
+        $user = User::where('slug', $slug)->first();
 
         if (!$user) {
             abort(404);
@@ -48,14 +49,15 @@ class AdminUserController extends Controller
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password')),
             'is_admin' => (int)$request->input('is_admin'),
+            'slug' => Str::slug($request->input('name')),
         ]);
 
         return redirect()->route('admin.users.list')->with('success', 'User created');
     }
 
-    public function edit($name)
+    public function edit($slug)
     {
-        $user = User::where('name', $name)->first();
+        $user = User::where('slug', $slug)->first();
 
         if (!$user) {
             abort(404);
@@ -64,10 +66,10 @@ class AdminUserController extends Controller
         return view('admin.users.edit', compact('user'));
     }
 
-    public function update(Request $request, $name)
+    public function update(Request $request, $slug)
     {
 
-        $user = User::where('name', $name)->firstOrFail();
+        $user = User::where('slug', $slug)->firstOrFail();
 
         // Валидация
         $this->validate($request, [
@@ -81,9 +83,10 @@ class AdminUserController extends Controller
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'is_admin' => (int)$request->input('is_admin'),
+            'slug' => Str::slug($request->input('name'), '-'),
         ]);
 
-        return redirect()->route('admin.users.show', ['name' => $user->name])->with('success', 'User updated');
+        return redirect()->route('admin.users.show', ['slug' => $user->slug])->with('success', 'User updated');
     }
 
     public function destroy($name)

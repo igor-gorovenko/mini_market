@@ -15,8 +15,8 @@
     <div>Role: {{ $user->is_admin == 1 ? 'Admin' : 'User' }}</div>
     <div>
         <h3>Actions</h3>
-        <a href="{{ route('admin.users.edit', ['name' => $user->name]) }}" class="btn btn-outline-primary">Edit</a>
-        <a href="{{ route('admin.users.destroy', ['name' => $user->name]) }}" class="btn btn-outline-danger">Delete</a>
+        <a href="{{ route('admin.users.edit', ['slug' => $user->slug]) }}" class="btn btn-outline-primary">Edit</a>
+        <a href="{{ route('admin.users.destroy', ['slug' => $user->slug]) }}" class="btn btn-outline-danger">Delete</a>
     </div>
 </div>
 

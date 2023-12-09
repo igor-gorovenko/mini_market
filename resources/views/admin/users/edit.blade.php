@@ -12,7 +12,7 @@
     </div>
 </div>
 
-<form action="{{ route('admin.users.update', ['name' => $user->name]) }}" method="post">
+<form action="{{ route('admin.users.update', ['slug' => $user->slug]) }}" method="post">
     @csrf
     @method('PUT')
 
