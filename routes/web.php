@@ -10,6 +10,18 @@ use App\Http\Controllers\UserController;
 
 Auth::routes();
 
+Route::get('/', function () {
+    $user = Auth::user();
+    if ($user) {
+        if ($user->is_admin) {
+            return redirect()->route('admin.index');
+        } else {
+            return redirect()->route('user.index');
+        }
+    }
+    return view('auth.login');
+})->name('index');
+
 Route::middleware(['admin'])->prefix('/admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
 
@@ -38,7 +50,7 @@ Route::middleware(['admin'])->prefix('/admin')->group(function () {
 
 Route::middleware(['user'])->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('user.index');
-    Route::get('/{name}', [UserController::class, 'show'])->name('user.show')->where('name', '[a-zA-Z0-9_-]+');
+    Route::get('/{slug}', [UserController::class, 'show'])->name('user.show')->where('slug', '[a-zA-Z0-9_-]+');
 });
 
 Route::get('/', function () {

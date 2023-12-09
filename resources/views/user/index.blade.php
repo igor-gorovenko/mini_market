@@ -8,9 +8,9 @@
     @foreach ($files as $file)
     <div class="col-md-4 mb-4">
         <div class="card border-0 bg-white">
-            <img src="{{ asset('/storage/uploaded_files/' . pathinfo($file->path, PATHINFO_FILENAME) . '.jpg') }}" class="card-img-top mx-auto" height='240px' alt="Изображение">
+            <img src="{{ asset('storage/' . $file->thumbnail) }}" class="card-img-top mx-auto" height='240px' alt="image">
             <div class="card-body text-center">
-                <a href="{{ route('show', ['name' => $file->name]) }}" class="btn btn-outline-primary">
+                <a href="{{ route('user.show', ['slug' => $file->slug]) }}" class="btn btn-outline-primary">
                     {{ $file->name }}
                 </a>
             </div>

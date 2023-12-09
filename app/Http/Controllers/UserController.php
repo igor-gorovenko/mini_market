@@ -13,9 +13,9 @@ class UserController extends Controller
         return view('user.index', ['files' => $files]);
     }
 
-    public function show($name)
+    public function show($slug)
     {
-        $file = File::where('name', $name)->firstOrFail();
+        $file = File::where('slug', $slug)->firstOrFail();
 
         return view('user.show', compact('file'));
     }
