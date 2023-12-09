@@ -11,7 +11,7 @@ use Faker\Factory as Faker;
 use Intervention\Image\ImageManagerStatic as Image;
 use TCPDF;
 
-class FilesTableSeeder extends Seeder
+class FilesSeeder extends Seeder
 {
     /**
      * Run the database seeds.
