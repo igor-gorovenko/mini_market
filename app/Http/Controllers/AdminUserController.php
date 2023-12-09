@@ -8,7 +8,6 @@ use Illuminate\Support\Str;
 
 use App\Models\User;
 
-
 class AdminUserController extends Controller
 {
     public function users()

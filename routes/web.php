@@ -8,7 +8,6 @@ use App\Http\Controllers\AdminFileController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\UserController;
 
-
 Auth::routes();
 
 Route::middleware(['admin'])->prefix('/admin')->group(function () {

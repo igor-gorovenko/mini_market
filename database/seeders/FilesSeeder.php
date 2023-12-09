@@ -11,6 +11,7 @@ use Faker\Factory as Faker;
 use Intervention\Image\ImageManagerStatic as Image;
 use TCPDF;
 
+
 class FilesSeeder extends Seeder
 {
     /**
