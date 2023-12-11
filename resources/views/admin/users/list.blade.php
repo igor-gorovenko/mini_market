@@ -23,7 +23,8 @@
     <tbody>
         @php $index = 1 @endphp
         @foreach ($users as $user)
-        <tr>
+
+        <tr class="align-middle">
             <td>{{ $index++ }}</td>
             <td>{{ $user->name }}</td>
             <td>{{ $user->email }}</td>
