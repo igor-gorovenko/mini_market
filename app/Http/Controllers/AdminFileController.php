@@ -18,17 +18,6 @@ class AdminFileController extends Controller
         return view('admin.files.list', compact('files'));
     }
 
-    public function show($slug)
-    {
-        $file = File::where('slug', $slug)->firstOrFail();
-
-        if (!$file) {
-            abort(404);
-        }
-
-        return view('admin.files.show', compact('file'));
-    }
-
     public function create()
     {
         return view('admin.files.create');
@@ -98,7 +87,7 @@ class AdminFileController extends Controller
         $this->uploadFile($file, 'thumbnail', 'uploaded_files/images');
         $this->uploadFile($file, 'path', 'uploaded_files/pdf');
 
-        return redirect()->route('admin.files.show', ['slug' => $file->slug])->with('success', 'File updated');
+        return redirect()->route('admin.files.list')->with('success', 'File updated');
     }
 
     public function destroy($slug)

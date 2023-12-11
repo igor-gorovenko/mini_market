@@ -3,7 +3,7 @@
 @section('content')
 
 <div>
-    <a href="/">Back</a>
+    <a href="{{ route('site.index') }}">Back</a>
 </div>
 <div class="p-4 d-flex">
     <div class="container w-70">

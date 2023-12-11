@@ -16,7 +16,6 @@ Route::middleware(['admin'])->prefix('/admin')->group(function () {
         Route::get('/', [AdminFileController::class, 'files'])->name('admin.files.list');
         Route::get('/create', [AdminFileController::class, 'create'])->name('admin.files.create');
         Route::post('/store', [AdminFileController::class, 'store'])->name('admin.files.store');
-        Route::get('/{slug}', [AdminFileController::class, 'show'])->name('admin.files.show')->where('slug', '[a-zA-Z0-9_-]+');
         Route::get('/{slug}/edit', [AdminFileController::class, 'edit'])->name('admin.files.edit')->where('slug', '[a-zA-Z0-9_-]+');
         Route::put('/{slug}/update', [AdminFileController::class, 'update'])->name('admin.files.update')->where('slug', '[a-zA-Z0-9_-]+');
         Route::get('/{slug}/delete', [AdminFileController::class, 'destroy'])->name('admin.files.destroy')->where('slug', '[a-zA-Z0-9_-]+');
@@ -35,5 +34,5 @@ Route::middleware(['admin'])->prefix('/admin')->group(function () {
 });
 
 
-Route::get('/', [HomeController::class, 'index'])->name('user.index');
-Route::get('/{slug}', [HomeController::class, 'show'])->name('user.show')->where('slug', '[a-zA-Z0-9_-]+');
+Route::get('/', [HomeController::class, 'index'])->name('site.index');
+Route::get('/{slug}', [HomeController::class, 'show'])->name('site.show')->where('slug', '[a-zA-Z0-9_-]+');
