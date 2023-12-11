@@ -3,14 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminFileController;
 use App\Http\Controllers\AdminUserController;
-use App\Http\Controllers\UserController;
-
+use App\Http\Controllers\HomeController;
 
 Auth::routes();
-
 
 // Only admin
 Route::middleware(['admin'])->prefix('/admin')->group(function () {
@@ -38,5 +35,5 @@ Route::middleware(['admin'])->prefix('/admin')->group(function () {
 });
 
 
-Route::get('/', [UserController::class, 'index'])->name('user.index');
-Route::get('/{slug}', [UserController::class, 'show'])->name('user.show')->where('slug', '[a-zA-Z0-9_-]+');
+Route::get('/', [HomeController::class, 'index'])->name('user.index');
+Route::get('/{slug}', [HomeController::class, 'show'])->name('user.show')->where('slug', '[a-zA-Z0-9_-]+');
