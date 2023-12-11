@@ -49,8 +49,10 @@
             </label>
         </div>
     </div>
-
-    <button type="submit" class="btn btn-primary">Create User</button>
+    <div>
+        <a href="{{ route('admin.users.list') }}" type="submit" class="btn btn-outline-primary">Cancel</a>
+        <button type="submit" class="btn btn-primary">Create User</button>
+    </div>
 </form>
 
 @endsection

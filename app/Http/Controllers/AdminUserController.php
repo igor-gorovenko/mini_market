@@ -17,17 +17,6 @@ class AdminUserController extends Controller
         return view('admin.users.list', compact('users'));
     }
 
-    public function show($slug)
-    {
-        $user = User::where('slug', $slug)->first();
-
-        if (!$user) {
-            abort(404);
-        }
-
-        return view('admin.users.show', compact('user'));
-    }
-
     public function create()
     {
         return view('admin.users.create');
@@ -85,12 +74,12 @@ class AdminUserController extends Controller
             'slug' => Str::slug($request->input('name'), '-'),
         ]);
 
-        return redirect()->route('admin.users.show', ['slug' => $user->slug])->with('success', 'User updated');
+        return redirect()->route('admin.users.list')->with('success', 'User updated');
     }
 
-    public function destroy($name)
+    public function destroy($slug)
     {
-        $user = User::where('name', $name)->firstOrFail();
+        $user = User::where('slug', $slug)->firstOrFail();
 
         $user->delete();
 

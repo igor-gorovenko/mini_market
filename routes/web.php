@@ -26,7 +26,6 @@ Route::middleware(['admin'])->prefix('/admin')->group(function () {
         Route::get('/', [AdminUserController::class, 'users'])->name('admin.users.list');
         Route::get('/create', [AdminUserController::class, 'create'])->name('admin.users.create');
         Route::post('/store', [AdminUserController::class, 'store'])->name('admin.users.store');
-        Route::get('/{slug}', [AdminUserController::class, 'show'])->name('admin.users.show')->where('slug', '[a-zA-Z0-9_-]+');
         Route::get('/{slug}/edit', [AdminUserController::class, 'edit'])->name('admin.users.edit')->where('slug', '[a-zA-Z0-9_-]+');
         Route::put('/{slug}/update', [AdminUserController::class, 'update'])->name('admin.users.update')->where('slug', '[a-zA-Z0-9_-]+');
         Route::get('/{slug}/delete', [AdminUserController::class, 'destroy'])->name('admin.users.destroy')->where('slug', '[a-zA-Z0-9_-]+');

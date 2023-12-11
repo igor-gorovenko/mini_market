@@ -34,7 +34,7 @@
             <td>${{ $file->price }}</td>
             <td>{{ $file->dates }}</td>
             <td>
-                <div class="d-flex justify-content-between align-items-center mx-1">
+                <div class="d-flex">
                     <a href="{{ route('site.show', ['slug' => $file->slug]) }}" target="_blank" title="view" class="btn btn-outline-primary btn-sm mx-1">View</a>
                     <a href="{{ route('admin.files.edit', ['slug' => $file->slug]) }}" title="edit" class="btn btn-outline-primary btn-sm mx-1">Edit</a>
                     <a href="{{ route('admin.files.destroy', ['slug' => $file->slug]) }}" title="delete" class="btn btn-outline-danger btn-sm mx-1">Delete</a>
