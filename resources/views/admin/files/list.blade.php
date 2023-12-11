@@ -2,12 +2,9 @@
 
 @section('content')
 
-<div>
-    <a href="{{ route('admin.index') }}">Back</a>
-</div>
 <div class="mt-2 mb-2">
     <div class="d-flex justify-content-between align-items-center">
-        <h1>List files</h1>
+        <h1>Files</h1>
         <a href="{{ route('admin.files.create') }}" class="btn btn-outline-primary">Create New File</a>
     </div>
 </div>

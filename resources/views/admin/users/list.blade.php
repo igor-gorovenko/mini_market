@@ -2,13 +2,9 @@
 
 @section('content')
 
-<div>
-    <a href="{{ route('admin.index') }}">Back</a>
-</div>
-
 <div class="mt-2 mb-2">
     <div class="d-flex justify-content-between align-items-center">
-        <h1>List users</h1>
+        <h1>Users</h1>
         <a href="{{ route('admin.users.create') }}" class="btn btn-outline-primary">Create New User</a>
     </div>
 </div>
