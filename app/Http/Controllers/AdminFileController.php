@@ -47,8 +47,6 @@ class AdminFileController extends Controller
     {
         $file = File::where('slug', $slug)->first();
 
-        $this->validate($request, []);
-
         $this->updateFile($request, $file);
 
         return redirect()->route('admin.files.list')->with('success', 'File updated');
@@ -72,7 +70,7 @@ class AdminFileController extends Controller
         return redirect()->route('admin.files.list')->with('success', 'file deleted');
     }
 
-    protected function updateFile(FileRequest $request, $file)
+    protected function updateFile($request, $file)
     {
         $data = [
             'name' => $request->input('name'),
