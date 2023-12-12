@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\FileRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -23,18 +24,8 @@ class AdminFileController extends Controller
         return view('admin.files.create');
     }
 
-    public function store(Request $request)
+    public function store(FileRequest $request)
     {
-        // Валидация
-        $this->validate($request, [
-            'name' => 'required|max:255',
-            'description' => 'nullable',
-            'price' => 'required|numeric',
-            'dates' => 'nullable|date',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Максимальный размер 2Мб
-            'path' => 'nullable|mimes:pdf|max:2048',
-        ]);
-
         $this->updateFile($request, null);
 
         return redirect()->route('admin.files.list')->with('success', 'File created');
@@ -52,19 +43,11 @@ class AdminFileController extends Controller
         return view('admin.files.edit', compact('file'));
     }
 
-    public function update(Request $request, $slug)
+    public function update(FileRequest $request, $slug)
     {
         $file = File::where('slug', $slug)->first();
 
-        // Валидация
-        $this->validate($request, [
-            'name' => 'required|max:255',
-            'description' => 'nullable',
-            'price' => 'required|numeric',
-            'dates' => 'nullable|date',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Максимальный размер 2Мб
-            'path' => 'nullable|mimes:pdf|max:2048',
-        ]);
+        $this->validate($request, []);
 
         $this->updateFile($request, $file);
 
@@ -89,7 +72,7 @@ class AdminFileController extends Controller
         return redirect()->route('admin.files.list')->with('success', 'file deleted');
     }
 
-    protected function updateFile(Request $request, $file)
+    protected function updateFile(FileRequest $request, $file)
     {
         $data = [
             'name' => $request->input('name'),
