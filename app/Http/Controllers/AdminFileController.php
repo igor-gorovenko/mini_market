@@ -35,16 +35,7 @@ class AdminFileController extends Controller
             'path' => 'nullable|mimes:pdf|max:2048',
         ]);
 
-        $file = File::create([
-            'name' => $request->input('name'),
-            'description' => $request->input('description'),
-            'price' => $request->input('price'),
-            'dates' => $request->input('dates'),
-            'slug' => Str::slug($request->input('name'), '-'),
-        ]);
-
-        $this->uploadFile($file, 'thumbnail', 'uploaded_files/images');
-        $this->uploadFile($file, 'path', 'uploaded_files/pdf');
+        $this->updateFile($request, null);
 
         return redirect()->route('admin.files.list')->with('success', 'File created');
     }
@@ -75,17 +66,7 @@ class AdminFileController extends Controller
             'path' => 'nullable|mimes:pdf|max:2048',
         ]);
 
-        // Обновление данных в базе
-        $file->update([
-            'name' => $request->input('name'),
-            'description' => $request->input('description'),
-            'price' => $request->input('price'),
-            'dates' => $request->input('dates'),
-            'slug' => Str::slug($request->input('name'), '-'),
-        ]);
-
-        $this->uploadFile($file, 'thumbnail', 'uploaded_files/images');
-        $this->uploadFile($file, 'path', 'uploaded_files/pdf');
+        $this->updateFile($request, $file);
 
         return redirect()->route('admin.files.list')->with('success', 'File updated');
     }
@@ -106,6 +87,26 @@ class AdminFileController extends Controller
         $file->delete();
 
         return redirect()->route('admin.files.list')->with('success', 'file deleted');
+    }
+
+    protected function updateFile(Request $request, $file)
+    {
+        $data = [
+            'name' => $request->input('name'),
+            'description' => $request->input('description'),
+            'price' => $request->input('price'),
+            'dates' => $request->input('dates'),
+            'slug' => Str::slug($request->input('name'), '-'),
+        ];
+
+        if ($file) {
+            $file->update($data);
+        } else {
+            $file = File::create($data);
+        }
+
+        $this->uploadFile($file, 'thumbnail', 'uploaded_files/images');
+        $this->uploadFile($file, 'path', 'uploaded_files/pdf');
     }
 
     private function uploadFile($file, $fieldName, $storagePath)
