@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\FileRequest;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+use App\Http\Requests\FileRequest;
 use App\Models\File;
 
 class AdminFileController extends Controller

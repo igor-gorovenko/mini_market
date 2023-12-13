@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminFileController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PaymentController;
 
 Auth::routes();
 
@@ -33,8 +34,10 @@ Route::middleware(['admin'])->prefix('/admin')->group(function () {
     });
 });
 
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-Route::post('/checkout', [CheckoutController::class, 'processPayment']);
+Route::post('/payment/create', [PaymentController::class, 'create'])->name('payment.create');
+Route::post('/payment/process', [PaymentController::class, 'process'])->name('payment.process');
+Route::get('/payment/success/{slug}', [PaymentController::class, 'success'])->name('payment.success');
+Route::get('/payment/cancel/{slug}', [PaymentController::class, 'cancel'])->name('payment.cancel');
 
 Route::get('/', [HomeController::class, 'index'])->name('site.index');
 Route::get('/{slug}', [HomeController::class, 'show'])->name('site.show')->where('slug', '[a-zA-Z0-9_-]+');

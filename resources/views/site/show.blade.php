@@ -18,10 +18,11 @@
         <div class="mb-3">
             <a href="{{ asset('/storage/' . $file->path) }}" download="{{ $file->name }}" class="btn btn-primary">Download {{ $file->name }}.pdf</a>
         </div>
-        <div class="mb-3">
-            <!-- Добавьте кнопку или ссылку для перехода к оплате -->
-            <a href="{{ route('checkout.index') }}" class="btn btn-success">Proceed to Checkout</a>
-        </div>
+        <form action="{{ route('payment.create') }}" method="post">
+            @csrf
+            <input type="hidden" name="slug" value="{{ $file->slug }}">
+            <button type="submit" class="btn btn-success">Оплатить</button>
+        </form>
     </div>
 </div>
 
