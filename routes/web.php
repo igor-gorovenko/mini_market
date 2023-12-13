@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\AdminFileController;
 use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 
 Auth::routes();
@@ -32,6 +33,8 @@ Route::middleware(['admin'])->prefix('/admin')->group(function () {
     });
 });
 
+Route::get('/checkout', [CheckoutController::class, 'index']);
+Route::post('/checkout', [CheckoutController::class, 'processPayment']);
 
 Route::get('/', [HomeController::class, 'index'])->name('site.index');
 Route::get('/{slug}', [HomeController::class, 'show'])->name('site.show')->where('slug', '[a-zA-Z0-9_-]+');
