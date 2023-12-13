@@ -33,7 +33,7 @@ Route::middleware(['admin'])->prefix('/admin')->group(function () {
     });
 });
 
-Route::get('/checkout', [CheckoutController::class, 'index']);
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 Route::post('/checkout', [CheckoutController::class, 'processPayment']);
 
 Route::get('/', [HomeController::class, 'index'])->name('site.index');

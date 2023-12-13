@@ -12,11 +12,15 @@
     </div>
     <div class="container w-30">
         <h3>{{ $file->name }}</h3>
-        <div>Description: {{ $file->description }}</div>
-        <div>Date: {{ $file->dates }}</div>
-        <div>Price: ${{ $file->price }}</div>
-        <div>
+        <div class="mb-3">Description: {{ $file->description }}</div>
+        <div class="mb-3">Date: {{ $file->dates }}</div>
+        <div class="mb-3">Price: ${{ $file->price }}</div>
+        <div class="mb-3">
             <a href="{{ asset('/storage/' . $file->path) }}" download="{{ $file->name }}" class="btn btn-primary">Download {{ $file->name }}.pdf</a>
+        </div>
+        <div class="mb-3">
+            <!-- Добавьте кнопку или ссылку для перехода к оплате -->
+            <a href="{{ route('checkout.index') }}" class="btn btn-success">Proceed to Checkout</a>
         </div>
     </div>
 </div>
