@@ -2,6 +2,10 @@
 
 @section('content')
 
+<!-- stripe scripts -->
+<script src="https://js.stripe.com/v3/"></script>
+<script async src="https://js.stripe.com/v3/buy-button.js"></script>
+
 <div>
     <a href="{{ route('site.index') }}">Back</a>
 </div>
@@ -18,11 +22,9 @@
         <div class="mb-3">
             <a href="{{ asset('/storage/' . $file->path) }}" download="{{ $file->name }}" class="btn btn-primary">Download {{ $file->name }}.pdf</a>
         </div>
-        <form action="{{ route('payment.create') }}" method="post">
-            @csrf
-            <input type="hidden" name="slug" value="{{ $file->slug }}">
-            <button type="submit" class="btn btn-success">Оплатить</button>
-        </form>
+        <!-- stripe button -->
+        <stripe-buy-button buy-button-id="buy_btn_1ONaLlIFHAOiXzuRDyvFjP5z" publishable-key="pk_test_51OMYxJIFHAOiXzuRkVhtQbKEmwxbMnH714cJGHb5gVAVA9DwOhRLKvoaXxke2mXJd1WLh0fZkFyjullPGqmj4Tdn00UEOS2neZ">
+        </stripe-buy-button>
     </div>
 </div>
 
