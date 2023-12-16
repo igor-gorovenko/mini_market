@@ -4,25 +4,26 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Stripe\Stripe;
-use Stripe\Checkout\Session;
 use Stripe\Product;
+use Stripe\Price;
+use Stripe\Checkout\Session;
 use App\Models\File;
 
 class PaymentController extends Controller
 {
-    public function createSession(Request $request, $name)
+    public function createSession(Request $request)
     {
         stripe::setApiKey(config('services.stripe.secret'));
 
-        // Product stripe
-
-        $productId = 'prod_PCKcHVp09WGaWp';
+        $name = $request->input('file_name');
+        // Найти продукты в базе
+        $productId = $this->getProductId($name);
 
         // Устанавливаем стоимость
-        $desireUnitAmount = 1300;
+        $unitAmount = 3300;
 
         // Получить ID цены
-        $priceId = $this->getPriceId($productId, $desireUnitAmount);
+        $priceId = $this->getPriceId($productId, $unitAmount);
 
         $session = Session::create([
             'line_items' => [[
@@ -47,9 +48,38 @@ class PaymentController extends Controller
         return view('payment.cancel');
     }
 
+    private function getProductId($productName)
+    {
+        // Получаем все продукты
+        $allProducts = Product::all()->data;
+
+        // Ищем продукт с нужным именем
+        $foundProduct = null;
+        foreach ($allProducts as $product) {
+            if ($product->name == $productName) {
+                $foundProduct = $product;
+                break;
+            }
+        }
+
+        if ($foundProduct) {
+            // Если продукт найден, возвращаем его id
+            return $foundProduct->id;
+        } else {
+            // Если продукт не найден, создаем новый в Stripe
+            $stripeProduct = Product::create([
+                'name' => $productName,
+                'description' => 'Product description', // Замените на актуальное описание
+                // Другие параметры продукта
+            ]);
+
+            return $stripeProduct->id;
+        }
+    }
+
     private function getPriceId($productId, $unitAmount)
     {
-        $price = \Stripe\Price::all([
+        $price = Price::all([
             'product' => $productId,
             'unit_amount' => $unitAmount,
             'currency' => 'usd',
@@ -60,7 +90,7 @@ class PaymentController extends Controller
             return $price->data[0]->id;
         } else {
             // иначе, создаем новую цену
-            $newPrice = \Stripe\Price::create([
+            $newPrice = Price::create([
                 'product' => $productId,
                 'unit_amount' => $unitAmount,
                 'currency' => 'usd',
