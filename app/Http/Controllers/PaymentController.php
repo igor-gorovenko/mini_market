@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
+use Stripe\Product;
 use App\Models\File;
 
 class PaymentController extends Controller
@@ -14,10 +15,11 @@ class PaymentController extends Controller
         stripe::setApiKey(config('services.stripe.secret'));
 
         // Product stripe
+
         $productId = 'prod_PCKcHVp09WGaWp';
 
-        // Устанавливаем желаемую стоимость
-        $desireUnitAmount = 6000;
+        // Устанавливаем стоимость
+        $desireUnitAmount = 1300;
 
         // Получить ID цены
         $priceId = $this->getPriceId($productId, $desireUnitAmount);
@@ -45,37 +47,26 @@ class PaymentController extends Controller
         return view('payment.cancel');
     }
 
-
-    private function getPriceId($productId, $desireUnitAmount)
+    private function getPriceId($productId, $unitAmount)
     {
-        $existingPrice = $this->findExistingPrice($productId, $desireUnitAmount);
+        $price = \Stripe\Price::all([
+            'product' => $productId,
+            'unit_amount' => $unitAmount,
+            'currency' => 'usd',
+        ]);
 
-        // Если цена есть, она используется
-        if ($existingPrice) {
-            return $existingPrice->id;
+        if (count($price->data) > 0) {
+            // Если цена уже существует, используйте ее
+            return $price->data[0]->id;
         } else {
             // иначе, создаем новую цену
-            $product = \Stripe\Product::retrieve($productId);
-
             $newPrice = \Stripe\Price::create([
-                'product' => $product->id,
-                'unit_amount' => $desireUnitAmount,
+                'product' => $productId,
+                'unit_amount' => $unitAmount,
                 'currency' => 'usd',
             ]);
 
             return $newPrice->id;
         }
-    }
-
-    private function findExistingPrice($productId, $desireUnitAmount)
-    {
-        $existingPrices = \Stripe\Price::all([
-            'product' => $productId,
-            'unit_amount' => $desireUnitAmount,
-            'currency' => 'usd',
-        ]);
-
-        $existingPrice = count($existingPrices->data) > 0 ? $existingPrices->data[0] : null;
-        return $existingPrice;
     }
 }
