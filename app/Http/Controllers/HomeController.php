@@ -10,7 +10,7 @@ class HomeController extends Controller
     {
         $files = File::all();
 
-        return view('site.index', ['files' => $files]);
+        return view('site.index', compact('files'));
     }
 
     public function show($slug)
