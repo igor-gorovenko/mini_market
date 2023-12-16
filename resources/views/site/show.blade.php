@@ -2,7 +2,6 @@
 
 @section('content')
 <script src="https://js.stripe.com/v3/"></script>
-<script async src="https://js.stripe.com/v3/buy-button.js"></script>
 
 <div>
     <a href="{{ route('site.index') }}">Back</a>
@@ -23,37 +22,9 @@
         <div>
             <form action="{{ route('payment.create') }}" method="POST">
                 @csrf
-
                 <button type="submit" id="checkout-button">Checkout</button>
             </form>
         </div>
-        <script>
-            var stripe = Stripe('{{ env("STRIPE_KEY") }}');
-
-            document.getElementById('checkout-button').addEventListener('click', function() {
-                fetch('/payment/session-create', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                        },
-                    })
-                    .then(response => response.json())
-                    .then(session => {
-                        stripe.redirectToCheckout({
-                                sessionId: session.id
-                            })
-                            .then(result => {
-                                if (result.error) {
-                                    alert(result.error.message);
-                                }
-                            });
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-            });
-        </script>
     </div>
 </div>
 

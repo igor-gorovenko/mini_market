@@ -36,6 +36,7 @@ Route::middleware(['admin'])->prefix('/admin')->group(function () {
 
 Route::post('/payment/session-create', [PaymentController::class, 'createSession'])->name('payment.create');
 Route::get('/payment/session-success', [PaymentController::class, 'successSession'])->name('payment.success');
+Route::get('/payment/session-cancel', [PaymentController::class, 'cancelSession'])->name('payment.cancel');
 
 Route::get('/', [HomeController::class, 'index'])->name('site.index');
 Route::get('/{slug}', [HomeController::class, 'show'])->name('site.show')->where('slug', '[a-zA-Z0-9_-]+');
