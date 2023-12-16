@@ -11,16 +11,15 @@ use App\Models\File;
 
 class PaymentController extends Controller
 {
-    public function createSession(Request $request)
+    public function createSession(Request $request, $slug)
     {
         stripe::setApiKey(config('services.stripe.secret'));
 
-        $name = $request->input('file_name');
         // Найти продукты в базе
-        $productId = $this->getProductId($name);
+        $productId = $this->getProductId($slug);
 
         // Устанавливаем стоимость
-        $unitAmount = 3300;
+        $unitAmount = 8600;
 
         // Получить ID цены
         $priceId = $this->getPriceId($productId, $unitAmount);
@@ -48,15 +47,20 @@ class PaymentController extends Controller
         return view('payment.cancel');
     }
 
-    private function getProductId($productName)
+    private function getProductId($slug)
     {
-        // Получаем все продукты
+        $file = File::where('slug', $slug)->first();
+        $name = $file->name;
+        $description = $file->description;
+
+
+        // Получаем все продукты stripe
         $allProducts = Product::all()->data;
 
         // Ищем продукт с нужным именем
         $foundProduct = null;
         foreach ($allProducts as $product) {
-            if ($product->name == $productName) {
+            if ($product->name == $name) {
                 $foundProduct = $product;
                 break;
             }
@@ -68,8 +72,8 @@ class PaymentController extends Controller
         } else {
             // Если продукт не найден, создаем новый в Stripe
             $stripeProduct = Product::create([
-                'name' => $productName,
-                'description' => 'Product description', // Замените на актуальное описание
+                'name' => $name,
+                'description' => $description,
                 // Другие параметры продукта
             ]);
 

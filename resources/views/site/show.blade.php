@@ -20,9 +20,8 @@
             <a href="{{ asset('/storage/' . $file->path) }}" download="{{ $file->name }}" class="btn btn-primary">Download {{ $file->name }}.pdf</a>
         </div>
         <div>
-            <form action="{{ route('payment.create', ['name' => $file->name]) }}" method="POST">
+            <form action="{{ route('payment.create', ['slug' => $file->slug]) }}" method="POST">
                 @csrf
-                <input type="hidden" name="file_name" value="{{ $file->name }}">
                 <button type="submit" id="checkout-button">Checkout</button>
             </form>
         </div>
