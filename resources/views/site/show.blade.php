@@ -1,8 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-
-<!-- stripe scripts -->
 <script src="https://js.stripe.com/v3/"></script>
 <script async src="https://js.stripe.com/v3/buy-button.js"></script>
 
@@ -22,9 +20,40 @@
         <div class="mb-3">
             <a href="{{ asset('/storage/' . $file->path) }}" download="{{ $file->name }}" class="btn btn-primary">Download {{ $file->name }}.pdf</a>
         </div>
-        <!-- stripe button -->
-        <stripe-buy-button buy-button-id="buy_btn_1ONaLlIFHAOiXzuRDyvFjP5z" publishable-key="pk_test_51OMYxJIFHAOiXzuRkVhtQbKEmwxbMnH714cJGHb5gVAVA9DwOhRLKvoaXxke2mXJd1WLh0fZkFyjullPGqmj4Tdn00UEOS2neZ">
-        </stripe-buy-button>
+        <div>
+            <form action="{{ route('payment.create') }}" method="POST">
+                @csrf
+
+                <button type="submit" id="checkout-button">Checkout</button>
+            </form>
+        </div>
+        <script>
+            var stripe = Stripe('{{ env("STRIPE_KEY") }}');
+
+            document.getElementById('checkout-button').addEventListener('click', function() {
+                fetch('/payment/session-create', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        },
+                    })
+                    .then(response => response.json())
+                    .then(session => {
+                        stripe.redirectToCheckout({
+                                sessionId: session.id
+                            })
+                            .then(result => {
+                                if (result.error) {
+                                    alert(result.error.message);
+                                }
+                            });
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            });
+        </script>
     </div>
 </div>
 
