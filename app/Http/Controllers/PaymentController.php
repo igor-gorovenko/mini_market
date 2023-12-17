@@ -17,8 +17,11 @@ class PaymentController extends Controller
 
         $file = File::where('slug', $slug)->first();
 
+        $defaultProductPrice = $file->price;
+        $inputAmount = $request->input('amount');
+
         // Получаем стоимость товара
-        $productPrice = $this->getProductPrice($file->price, $request->input('amount'));
+        $productPrice = $this->getProductPrice($defaultProductPrice, $inputAmount);
 
         // Найти продукты в базе
         $productId = $this->getProductId($file);
@@ -32,16 +35,21 @@ class PaymentController extends Controller
                 'quantity' => 1,
             ]],
             'mode' => 'payment',
-            'success_url' => route('payment.success'),
+            'success_url' => route('payment.success', ['slug' => $slug]),
             'cancel_url' => route('payment.cancel'),
         ]);
 
         return redirect($session->url);
     }
 
-    public function successSession()
+    public function successSession($slug)
     {
-        return view('payment.success');
+        $file = File::where('slug', $slug)->first();
+        if ($file) {
+            $file->update(['payment_status' => 'paid']);
+        }
+
+        return view('payment.success', compact('file'));
     }
 
     public function cancelSession()

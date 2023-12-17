@@ -17,7 +17,9 @@
         <div class="mb-3">Date: {{ $file->dates }}</div>
         <div class="mb-3">Price: ${{ $file->price }}</div>
         <div class="mb-3">
+            @if ($file->isPaid() || $file->price == 0)
             <a href="{{ asset('/storage/' . $file->path) }}" download="{{ $file->name }}" class="btn btn-primary">Download {{ $file->name }}.pdf</a>
+            @endif
         </div>
         <div>
             <form action="{{ route('payment.create', ['slug' => $file->slug]) }}" method="POST">

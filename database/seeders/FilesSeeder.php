@@ -79,11 +79,12 @@ class FilesSeeder extends Seeder
                 'description' => $faker->sentence,
                 'thumbnail' => str_replace($baseDirectory . '/', '', $imagePath),
                 'path' => str_replace($baseDirectory . '/', '', $pdfPath),
-                'price' => $faker->randomFloat(2, 0, 100),
+                'price' => rand(0, 10),
                 'dates' => $faker->date(),
                 'slug' => $slug,
                 'created_at' => now(),
                 'updated_at' => now(),
+                'payment_status' => 'unpaid',
             ]);
         }
     }

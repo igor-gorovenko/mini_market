@@ -3,6 +3,9 @@
 @section('content')
 
 <h1>Cancel session</h1>
-<a href="{{ route('site.index') }}">Go to index page</a>
+
+<div>
+    <a href="{{ route('site.index') }}" class="btn btn-primary mb-3">Go to index page</a>
+</div>
 
 @endsection
