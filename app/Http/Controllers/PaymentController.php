@@ -17,11 +17,11 @@ class PaymentController extends Controller
 
         $file = File::where('slug', $slug)->first();
 
+        // Получаем стоимость товара
+        $productPrice = $this->getProductPrice($file->price, $request->input('amount'));
+
         // Найти продукты в базе
         $productId = $this->getProductId($file);
-
-        // Исправляем цену продукта, в страйп без десятичных знаков
-        $productPrice = round($file->price * 100);
 
         // Получить ID цены
         $priceId = $this->getPriceId($productId, $productPrice);
@@ -72,7 +72,6 @@ class PaymentController extends Controller
             $stripeProduct = Product::create([
                 'name' => $file->name,
                 'description' => $file->description,
-                // 'images' => $file->thumbnail,
             ]);
 
             return $stripeProduct->id;
@@ -100,5 +99,18 @@ class PaymentController extends Controller
 
             return $newPrice->id;
         }
+    }
+
+    private function getProductPrice($productPrice, $inputAmount)
+    {
+        // Проверьте, что введенная сумма больше стоимости товара
+        if ($productPrice <= $inputAmount) {
+            $productPrice = $inputAmount;
+        }
+
+        // Исправляем цену продукта, в страйп без десятичных знаков
+        $newProdictPrice = round($productPrice * 100);
+
+        return $newProdictPrice;
     }
 }
