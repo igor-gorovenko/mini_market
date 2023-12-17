@@ -10,7 +10,7 @@
         <div class="card border-0 bg-white">
             <img src="{{ asset('storage/' . $file->thumbnail) }}" class="card-img-top mx-auto" height='240px' alt="image">
             <div class="card-body text-center">
-                <a href="{{ route('user.show', ['slug' => $file->slug]) }}" class="btn btn-outline-primary">
+                <a href="{{ route('site.show', ['slug' => $file->slug]) }}" class="btn btn-outline-primary">
                     {{ $file->name }}
                 </a>
             </div>

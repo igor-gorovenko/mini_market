@@ -2,10 +2,6 @@
 
 @section('content')
 
-<div>
-    <a href="{{ route('admin.users.list') }}">Back</a>
-</div>
-
 <div class="mt-2 mb-2">
     <div class="d-flex justify-content-between align-items-center">
         <h1>Create New User</h1>
@@ -49,8 +45,10 @@
             </label>
         </div>
     </div>
-
-    <button type="submit" class="btn btn-primary">Create User</button>
+    <div>
+        <a href="{{ route('admin.users.list') }}" type="submit" class="btn btn-outline-primary">Cancel</a>
+        <button type="submit" class="btn btn-primary">Create User</button>
+    </div>
 </form>
 
 @endsection

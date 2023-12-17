@@ -4,19 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\File;
 
-class UserController extends Controller
+class HomeController extends Controller
 {
     public function index()
     {
         $files = File::all();
 
-        return view('user.index', ['files' => $files]);
+        return view('site.index', compact('files'));
     }
 
     public function show($slug)
     {
         $file = File::where('slug', $slug)->firstOrFail();
 
-        return view('user.show', compact('file'));
+        return view('site.show', compact('file'));
     }
 }

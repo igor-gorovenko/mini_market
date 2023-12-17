@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class AdminUserController extends Controller
 {
@@ -17,39 +18,14 @@ class AdminUserController extends Controller
         return view('admin.users.list', compact('users'));
     }
 
-    public function show($slug)
-    {
-        $user = User::where('slug', $slug)->first();
-
-        if (!$user) {
-            abort(404);
-        }
-
-        return view('admin.users.show', compact('user'));
-    }
-
     public function create()
     {
         return view('admin.users.create');
     }
 
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
-        $this->validate($request, [
-            'name' => 'required|max:255',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-            'is_admin' => 'required|boolean',
-        ]);
-
-        // Создание нового пользователя
-        $user = User::create([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'password' => Hash::make($request->input('password')),
-            'is_admin' => (int)$request->input('is_admin'),
-            'slug' => Str::slug($request->input('name')),
-        ]);
+        $this->updateUser($request, null);
 
         return redirect()->route('admin.users.list')->with('success', 'User created');
     }
@@ -65,35 +41,38 @@ class AdminUserController extends Controller
         return view('admin.users.edit', compact('user'));
     }
 
-    public function update(Request $request, $slug)
+    public function update(UserRequest $request, $slug)
     {
-
         $user = User::where('slug', $slug)->firstOrFail();
 
-        // Валидация
-        $this->validate($request, [
-            'name' => 'required|max:255',
-            'email' => 'required|email',
-            'is_admin' => 'required|boolean',
-        ]);
+        $this->updateUser($request, $user);
 
-        // Обновление данных в базе
-        $user->update([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'is_admin' => (int)$request->input('is_admin'),
-            'slug' => Str::slug($request->input('name'), '-'),
-        ]);
-
-        return redirect()->route('admin.users.show', ['slug' => $user->slug])->with('success', 'User updated');
+        return redirect()->route('admin.users.list')->with('success', 'User updated');
     }
 
-    public function destroy($name)
+    public function destroy($slug)
     {
-        $user = User::where('name', $name)->firstOrFail();
+        $user = User::where('slug', $slug)->firstOrFail();
 
         $user->delete();
 
         return redirect()->route('admin.users.list')->with('success', 'user deleted');
+    }
+
+    protected function updateUser($request, $user)
+    {
+        $data = [
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'is_admin' => (int)$request->input('is_admin'),
+            'slug' => Str::slug($request->input('name'), '-'),
+            'password' => Hash::make($request->input('password')),
+        ];
+
+        if ($user) {
+            $user->update($data);
+        } else {
+            $user = User::create($data);
+        }
     }
 }

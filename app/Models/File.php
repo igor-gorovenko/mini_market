@@ -20,5 +20,11 @@ class File extends Model
         'price',
         'dates',
         'slug',
+        'payment_status',
     ];
+
+    public function isPaid()
+    {
+        return $this->payment_status === 'paid';
+    }
 }
