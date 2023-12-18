@@ -1,4 +1,3 @@
-
 # Mini market
 
 Это площадка, которая позволяет выставлять товары для пользователей, с возможностью выставить минимальную цену.
@@ -47,6 +46,12 @@ npm install
 npm run build
 ```
 
+Выполняем миграции
+
+```
+php artisan migrate
+```
+
 #### 3. Generate data
 
 Генерируем данные
@@ -59,22 +64,40 @@ php artisan db:seed
 php artisan storage:link
 ```
 
-#### 4. Запускаем проект
+
+#### 4. Stripe
+
+Устанавливаем Stripe
+
+```
+composer require stripe/stripe-php
+```
+
+Добавить ключи в .env
+
+Ключи можно найти в админке Stripe -> Developer -> API Keys
+Publishable key и Secret key
+
+```
+STRIPE_KEY=pk_test
+STRIPE_SECRET=sk_test
+```
+
+#### 5. Запускаем проект
 
 Запустить сервер с помощью artisan или своим способом
-
 ```
 php artisan serve
 ```
 
 Пользователи для входа
 ```
-Admin
+// Admin
 
 admin@example.com
 test1234
 
-User
+// User
 
 user@example.com
 test1234

@@ -9,6 +9,7 @@ use Stripe\Price;
 use Stripe\Checkout\Session;
 use App\Models\File;
 
+
 class PaymentController extends Controller
 {
     public function createSession(Request $request, $slug)
