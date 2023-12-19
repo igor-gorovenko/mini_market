@@ -21,6 +21,7 @@ return new class extends Migration
             $table->double('price', 8, 2)->nullable();
             $table->date('dates')->nullable();
             $table->string('slug')->nullable();
+            $table->string('stripe_product_id')->nullable();
             $table->timestamps();
         });
     }

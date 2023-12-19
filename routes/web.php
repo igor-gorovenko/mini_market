@@ -5,9 +5,9 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\AdminFileController;
 use App\Http\Controllers\AdminUserController;
-use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\FileSynchronizationController;
 
 Auth::routes();
 
@@ -16,6 +16,8 @@ Route::middleware(['admin'])->prefix('/admin')->group(function () {
     // Files
     Route::prefix('/files')->group(function () {
         Route::get('/', [AdminFileController::class, 'files'])->name('admin.files.list');
+        Route::post('/synchronize-files', [FileSynchronizationController::class, 'synchronizeFiles'])->name('admin.files.synchronize');
+        Route::get('/sync-success', [FileSynchronizationController::class, 'syncSuccess'])->name('admin.files.sync.success');
         Route::get('/create', [AdminFileController::class, 'create'])->name('admin.files.create');
         Route::post('/store', [AdminFileController::class, 'store'])->name('admin.files.store');
         Route::get('/{slug}/edit', [AdminFileController::class, 'edit'])->name('admin.files.edit')->where('slug', '[a-zA-Z0-9_-]+');

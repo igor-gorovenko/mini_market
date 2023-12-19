@@ -34,7 +34,7 @@ class FilesSeeder extends Seeder
         File::makeDirectory($pdfDirectory, 0777, true, true);
         File::makeDirectory($imageDirectory, 0777, true, true);
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 4; $i++) {
             $fileName = $faker->words(rand(2, 3), true);
             $slug = Str::slug($fileName, '-');
             $pdfPath = $pdfDirectory . '/' . $fileName . '.pdf';
@@ -85,6 +85,7 @@ class FilesSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
                 'payment_status' => 'unpaid',
+
             ]);
         }
     }
