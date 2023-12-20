@@ -19,7 +19,7 @@ class PaymentController extends Controller
         $file = File::where('slug', $slug)->first();
 
         // Донат
-        $donateId = 'price_1OPM3MIFHAOiXzuRxZjkIo4D';
+        $donateId = $this->findExtraId();
         $totalAmount = ($request->input('amount'));
         $donateQty = $totalAmount - $file->price;
 
@@ -39,6 +39,8 @@ class PaymentController extends Controller
 
         return redirect($session->url);
     }
+
+
 
     public function successSession($slug)
     {
@@ -110,5 +112,22 @@ class PaymentController extends Controller
         }
 
         return $lineItems;
+    }
+
+    function findExtraId()
+    {
+        // Список товаров активных, не в архиве
+        $allProducts = Product::all(['active' => true]);
+
+        $searchedName = 'extra';
+
+        // Поиск товара по имени и возврат цены
+        foreach ($allProducts->data as $product) {
+            if ($product->name == $searchedName) {
+                return $product->default_price;
+            }
+        }
+
+        return null;
     }
 }
