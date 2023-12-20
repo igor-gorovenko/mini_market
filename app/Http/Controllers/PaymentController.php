@@ -14,13 +14,14 @@ class PaymentController extends Controller
 {
     public function createSession(Request $request, $slug)
     {
-        stripe::setApiKey(config('services.stripe.secret'));
+        Stripe::setApiKey(config('services.stripe.secret'));
 
         $file = File::where('slug', $slug)->first();
 
         // Донат
-        $donateId = 'price_1OP2RkIFHAOiXzuR470E1V3H';
-        $donateQty = $request->input('amount') - $file->price;
+        $donateId = 'price_1OPM3MIFHAOiXzuRxZjkIo4D';
+        $totalAmount = ($request->input('amount'));
+        $donateQty = $totalAmount - $file->price;
 
         // Получаем ID продукта и цены
         $productId = $this->getProductId($file);

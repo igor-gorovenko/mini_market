@@ -2,21 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\File;
 use Stripe\Stripe;
 use Stripe\Product;
 use Stripe\Price;
 
+
 class FileSynchronizationController extends Controller
 {
     public function synchronizeFiles()
     {
-        stripe::setApiKey(config('services.stripe.secret'));
+        Stripe::setApiKey(config('services.stripe.secret'));
+
+        // Проверяем есть ли товар extra, если нет создаем его
+        $extraProduct = $this->findOrCreateExtraProduct();
 
         $files = File::all();
+
+        // Списка для вывода в результате
         $addedFiles = [];
         $updatedFiles = [];
+
+        // Если мы создали товар extra = добавляем его в список
+        if ($extraProduct !== null) {
+            $addedFiles[] = $extraProduct;
+        }
 
         foreach ($files as $file) {
             // Проверяем, существует ли товар в Stripe
@@ -36,6 +46,45 @@ class FileSynchronizationController extends Controller
         }
 
         return view('admin.files.sync-success', compact('addedFiles', 'updatedFiles'));
+    }
+
+    function findOrCreateExtraProduct()
+    {
+        // Список товаров активных, не в архиве
+        $allProducts = Product::all(['active' => true]);
+
+        $searchedName = 'extra';
+
+        // Поиск товара по имени
+        foreach ($allProducts->data as $product) {
+            if ($product->name == $searchedName) {
+                return null;
+            }
+        }
+
+        $extraProduct = null;
+        // Если товара нет, создаем его
+        if (!$extraProduct) {
+            $stripeProduct = Product::create([
+                'name' => 'extra',
+                'type' => 'good',
+                'description' => 'donate',
+            ]);
+
+            $price = Price::create([
+                'product' => $stripeProduct->id,
+                'unit_amount' => 100, // $1 = 100 cents
+                'currency' => 'usd',
+            ]);
+
+            // добавляем цену в продукт
+            Product::update(
+                $stripeProduct->id,
+                ['default_price' => $price->id]
+            );
+
+            return $stripeProduct;
+        }
     }
 
     public function syncSuccess()

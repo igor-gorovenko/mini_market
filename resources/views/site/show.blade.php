@@ -44,7 +44,7 @@
             <form action="{{ route('payment.create', ['slug' => $file->slug]) }}" method="POST">
                 @csrf
                 <label for="amount" class="mr-2">Enter Amount:</label>
-                <input type="number" name="amount" id="amount" min="{{ $file->price }}" value="{{ $file->price }}" required>
+                <input type="number" name="amount" id="amount" min="{{ $file->price }}" value="{{ $file->price }}" step="1" required>
                 <button type="submit" id="checkout-button" class="btn btn-success">Checkout</button>
             </form>
         </div>
