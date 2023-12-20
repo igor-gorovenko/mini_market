@@ -48,7 +48,7 @@ class FileSynchronizationController extends Controller
                 }
 
                 // если товар есть обновляем или скипаем
-                if ($this->shouldUpdateProduct($stripeProduct, $file)) {
+                if ($this->checkProduct($stripeProduct, $file)) {
                     $stripeProduct = $this->updateStripeProduct($stripeProduct, $file);
                     $updatedFiles[] = $file;
                 } else {
@@ -108,7 +108,7 @@ class FileSynchronizationController extends Controller
         return view('admin.files.sync-success');
     }
 
-    private function shouldUpdateProduct($stripeProduct, $file)
+    private function checkProduct($stripeProduct, $file)
     {
         $checkName = $file->name != $stripeProduct->name;
         $checkDesc = $file->description != $stripeProduct->description;
