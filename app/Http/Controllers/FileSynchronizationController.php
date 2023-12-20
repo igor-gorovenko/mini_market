@@ -22,6 +22,7 @@ class FileSynchronizationController extends Controller
         // Списка для вывода в результате
         $addedFiles = [];
         $updatedFiles = [];
+        $skippedFiles = [];
 
         // Если мы создали товар extra = добавляем его в список
         if ($extraProduct !== null) {
@@ -33,10 +34,12 @@ class FileSynchronizationController extends Controller
             if ($file->stripe_product_id) {
                 $stripeProduct = Product::retrieve($file->stripe_product_id);
 
-                // Обновляем товар            
+                // Проверяем наличие изменений в файле
                 if ($this->shouldUpdateProduct($stripeProduct, $file)) {
                     $stripeProduct = $this->updateStripeProduct($stripeProduct, $file);
                     $updatedFiles[] = $file;
+                } else {
+                    $skippedFiles[] = $file;
                 }
             } else {
                 // Если товара нет, создаем товар
@@ -45,7 +48,7 @@ class FileSynchronizationController extends Controller
             }
         }
 
-        return view('admin.files.sync-success', compact('addedFiles', 'updatedFiles'));
+        return view('admin.files.sync-success', compact('addedFiles', 'updatedFiles', 'skippedFiles'));
     }
 
     function findOrCreateExtraProduct()
@@ -94,9 +97,9 @@ class FileSynchronizationController extends Controller
 
     private function shouldUpdateProduct($file, $stripeProduct)
     {
-        $nameDifference = $file->name !== $stripeProduct->name;
-        $descriptionDifference = $file->description !== $stripeProduct->description;
-        $priceDifference = ($file->price * 100) !== $stripeProduct->default_price;
+        $nameDifference = $file->name != $stripeProduct->name;
+        $descriptionDifference = $file->description != $stripeProduct->description;
+        $priceDifference = ($file->price * 100) != $stripeProduct->default_price;
 
         return $nameDifference || $descriptionDifference || $priceDifference;
     }
