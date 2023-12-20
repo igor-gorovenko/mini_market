@@ -29,12 +29,25 @@ class FileSynchronizationController extends Controller
             $addedFiles[] = $extraProduct;
         }
 
-        foreach ($files as $file) {
-            // Проверяем, существует ли товар в Stripe
-            if ($file->stripe_product_id) {
-                $stripeProduct = Product::retrieve($file->stripe_product_id);
 
-                // Проверяем наличие изменений в файле
+        foreach ($files as $file) {
+            // Проверяем, есть ли id у товара в бд
+            if ($file->stripe_product_id) {
+                // Проверка, если есть id у товара, но его нет в Stripe
+                try {
+                    $stripeProduct = Product::retrieve($file->stripe_product_id);
+                } catch (\Exception $e) {
+                    // Обнуляем id если товара нет в страйп
+                    $file->stripe_product_id = null;
+                    $file->save();
+
+                    // создаем продукт и добавляем в список
+                    $stripeProduct = $this->createStripeProduct($file);
+                    $addedFiles[] = $file;
+                    continue;
+                }
+
+                // если товар есть обновляем или скипаем
                 if ($this->shouldUpdateProduct($stripeProduct, $file)) {
                     $stripeProduct = $this->updateStripeProduct($stripeProduct, $file);
                     $updatedFiles[] = $file;
