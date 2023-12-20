@@ -8,6 +8,7 @@ use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\FileSynchronizationController;
+use App\Http\Controllers\StripeSettingController;
 
 Auth::routes();
 
@@ -33,6 +34,12 @@ Route::middleware(['admin'])->prefix('/admin')->group(function () {
         Route::get('/{slug}/edit', [AdminUserController::class, 'edit'])->name('admin.users.edit')->where('slug', '[a-zA-Z0-9_-]+');
         Route::put('/{slug}/update', [AdminUserController::class, 'update'])->name('admin.users.update')->where('slug', '[a-zA-Z0-9_-]+');
         Route::get('/{slug}/delete', [AdminUserController::class, 'destroy'])->name('admin.users.destroy')->where('slug', '[a-zA-Z0-9_-]+');
+    });
+
+    // Settings
+    Route::prefix('/settings')->group(function () {
+        Route::get('/', [StripeSettingController::class, 'index'])->name('admin.settings.index');
+        Route::post('/update', [StripeSettingController::class, 'update'])->name('admin.settings.update');
     });
 });
 
