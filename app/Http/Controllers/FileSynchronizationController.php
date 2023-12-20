@@ -108,18 +108,22 @@ class FileSynchronizationController extends Controller
         return view('admin.files.sync-success');
     }
 
-    private function shouldUpdateProduct($file, $stripeProduct)
+    private function shouldUpdateProduct($stripeProduct, $file)
     {
-        $nameDifference = $file->name != $stripeProduct->name;
-        $descriptionDifference = $file->description != $stripeProduct->description;
-        $priceDifference = ($file->price * 100) != $stripeProduct->default_price;
+        $checkName = $file->name != $stripeProduct->name;
+        $checkDesc = $file->description != $stripeProduct->description;
 
-        return $nameDifference || $descriptionDifference || $priceDifference;
+        // Находим id цены и цену
+        $priceId = $stripeProduct->default_price;
+        $priceAmount = Price::retrieve($priceId, [])->unit_amount;
+
+        $checkPrice = $priceAmount != ($file->price * 100);
+
+        return $checkName || $checkDesc || $checkPrice;
     }
 
     private function updateStripeProduct($stripeProduct, $file)
     {
-
         Product::update(
             $stripeProduct->id,
             [
@@ -127,6 +131,23 @@ class FileSynchronizationController extends Controller
                 'description' => $file->description,
             ]
         );
+
+        $priceAmount = Price::retrieve($stripeProduct->default_price, [])->unit_amount;
+
+        // Обновляем цену только если ее обновили
+        if ($priceAmount != (int)$file->price * 100) {
+            $newPrice = Price::create([
+                'product' => $stripeProduct->id,
+                'unit_amount' => $file->price * 100,
+                'currency' => 'usd',
+            ]);
+
+            // добавляем цену в продукт
+            Product::update(
+                $stripeProduct->id,
+                ['default_price' => $newPrice->id]
+            );
+        }
     }
 
     private function createStripeProduct($file)
