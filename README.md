@@ -73,15 +73,12 @@ php artisan storage:link
 composer require stripe/stripe-php
 ```
 
-Добавить ключи в .env
+Добавить ключи
+
+Добавьте ключи из админки stripe, на страницу сервиса Settings.
 
 Ключи можно найти в админке Stripe -> Developer -> API Keys
 Publishable key и Secret key
-
-```
-STRIPE_KEY=pk_test
-STRIPE_SECRET=sk_test
-```
 
 #### 5. Запускаем проект
 

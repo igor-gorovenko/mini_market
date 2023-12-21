@@ -8,33 +8,33 @@ use Stripe\Product;
 use Stripe\Price;
 use Stripe\Checkout\Session;
 use App\Models\File;
-
+use App\Models\Setting;
 
 class PaymentController extends Controller
 {
     public function createSession(Request $request, $slug)
     {
-        stripe::setApiKey(config('services.stripe.secret'));
+        // Получаем ключ из бд
+        $stripeSecretKey = Setting::where('key', 'stripe_secret_key')->value('value');
+        Stripe::setApiKey($stripeSecretKey);
+
 
         $file = File::where('slug', $slug)->first();
 
-        $defaultProductPrice = $file->price;
-        $inputAmount = $request->input('amount');
+        // Донат
+        $donateId = $this->findExtraId();
+        $totalAmount = ($request->input('amount'));
+        $donateQty = $totalAmount - $file->price;
 
-        // Получаем стоимость товара
-        $productPrice = $this->getProductPrice($defaultProductPrice, $inputAmount);
-
-        // Найти продукты в базе
+        // Получаем ID продукта и цены
         $productId = $this->getProductId($file);
+        $priceId = $this->getPriceId($productId);
 
-        // Получить ID цены
-        $priceId = $this->getPriceId($productId, $productPrice);
+        // Генерируем lineItems
+        $lineItems = $this->generateLineItems($priceId, $donateId, $donateQty);
 
         $session = Session::create([
-            'line_items' => [[
-                'price' => $priceId,
-                'quantity' => 1,
-            ]],
+            'line_items' => $lineItems,
             'mode' => 'payment',
             'success_url' => route('payment.success', ['slug' => $slug]),
             'cancel_url' => route('payment.cancel'),
@@ -43,9 +43,12 @@ class PaymentController extends Controller
         return redirect($session->url);
     }
 
+
+
     public function successSession($slug)
     {
         $file = File::where('slug', $slug)->first();
+
         if ($file) {
             $file->update(['payment_status' => 'paid']);
         }
@@ -60,7 +63,6 @@ class PaymentController extends Controller
 
     private function getProductId($file)
     {
-
         // Получаем все продукты stripe
         $allProducts = Product::all()->data;
 
@@ -73,53 +75,62 @@ class PaymentController extends Controller
             }
         }
 
-        if ($foundProduct) {
-            // Если продукт найден, возвращаем его id
-            return $foundProduct->id;
-        } else {
-
-            $stripeProduct = Product::create([
-                'name' => $file->name,
-                'description' => $file->description,
-            ]);
-
-            return $stripeProduct->id;
+        if (!$foundProduct) {
+            throw new \Exception("Product ID is not found: $file->name");
         }
+
+        return $foundProduct->id;
     }
 
-    private function getPriceId($productId, $productPrice)
+    private function getPriceId($productId)
     {
         $price = Price::all([
             'product' => $productId,
-            'unit_amount' => $productPrice,
             'currency' => 'usd',
         ]);
 
-        if (count($price->data) > 0) {
-            // Если цена уже существует, используйте ее
-            return $price->data[0]->id;
-        } else {
-            // иначе, создаем новую цену
-            $newPrice = Price::create([
-                'product' => $productId,
-                'unit_amount' => $productPrice,
-                'currency' => 'usd',
-            ]);
-
-            return $newPrice->id;
+        if (empty($price->data) || !isset($price->data[0])) {
+            throw new \Exception("Price ID is not found for product ID: $productId");
         }
+
+        // Вернуть ID цены
+        return $price->data[0]->id;
     }
 
-    private function getProductPrice($productPrice, $inputAmount)
+    private function generateLineItems($priceId, $donateId, $donateQty)
     {
-        // Проверьте, что введенная сумма больше стоимости товара
-        if ($productPrice <= $inputAmount) {
-            $productPrice = $inputAmount;
+        $lineItems = [
+            [
+                'price' => $priceId,
+                'quantity' => 1,
+            ],
+        ];
+
+        // Добавляем донат, только если больше 0
+        if ($donateQty > 0) {
+            $lineItems[] = [
+                'price' => $donateId,
+                'quantity' => $donateQty,
+            ];
         }
 
-        // Исправляем цену продукта, в страйп без десятичных знаков
-        $newProdictPrice = round($productPrice * 100);
+        return $lineItems;
+    }
 
-        return $newProdictPrice;
+    function findExtraId()
+    {
+        // Список товаров активных, не в архиве
+        $allProducts = Product::all(['active' => true]);
+
+        $searchedName = 'extra';
+
+        // Поиск товара по имени и возврат цены
+        foreach ($allProducts->data as $product) {
+            if ($product->name == $searchedName) {
+                return $product->default_price;
+            }
+        }
+
+        return null;
     }
 }

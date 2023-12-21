@@ -24,7 +24,7 @@
                     <a class="nav-link {{ Route::is('admin.users.list') ? 'active' : '' }}" href="{{ route('admin.users.list') }}">Users</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Settings</a>
+                    <a class="nav-link {{ Route::is('admin.settings.index') ? 'active' : '' }}" href="{{ route('admin.settings.index') }}">Settings</a>
                 </li>
             </ul>
             @endif
