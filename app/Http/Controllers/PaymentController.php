@@ -8,13 +8,16 @@ use Stripe\Product;
 use Stripe\Price;
 use Stripe\Checkout\Session;
 use App\Models\File;
-
+use App\Models\Setting;
 
 class PaymentController extends Controller
 {
     public function createSession(Request $request, $slug)
     {
-        Stripe::setApiKey(config('services.stripe.secret'));
+        // Получаем ключ из бд
+        $stripeSecretKey = Setting::where('key', 'stripe_secret_key')->value('value');
+        Stripe::setApiKey($stripeSecretKey);
+
 
         $file = File::where('slug', $slug)->first();
 

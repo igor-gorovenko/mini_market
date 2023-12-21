@@ -6,13 +6,14 @@ use App\Models\File;
 use Stripe\Stripe;
 use Stripe\Product;
 use Stripe\Price;
-
+use App\Models\Setting;
 
 class FileSynchronizationController extends Controller
 {
     public function synchronizeFiles()
     {
-        Stripe::setApiKey(config('services.stripe.secret'));
+        $stripeSecretKey = Setting::where('key', 'stripe_secret_key')->value('value');
+        Stripe::setApiKey($stripeSecretKey);
 
         // Проверяем есть ли товар extra, если нет создаем его
         $extraProduct = $this->findOrCreateExtraProduct();
